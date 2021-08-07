@@ -8,10 +8,10 @@ public class PlayerController : MonoBehaviour
     public BoxCollider2D boxCollider;
 
     [Header("Movement Stats")]
-    public float acceleration = 3f; 
+    public float acceleration = 3f;
     public float slideAccel = 2f; // acceleration for slow down
     public float xVelocity = 0f;
-    public float maxSpeed = 3f;
+    public float xMaxSpeed = 3f;
     public float jumpPower = 10f;
     public LayerMask platformLayer;
     public float extraHeight = 0.1f; // to check ground
@@ -27,13 +27,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateMovement();
+        // UpdateMovement();
 
         // Jump
         if (IsGrounded() && Input.GetKeyDown(KeyCode.W))
         {
             Jump();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        // move X direction
+        float xDirection = Input.GetAxisRaw("Horizontal");
+        rb.AddForce(Vector2.right * xDirection * acceleration);
+
+        if (Mathf.Abs(rb.velocity.x) > xMaxSpeed)
+        {
+            rb.velocity = new Vector2( Mathf.Sign(rb.velocity.x) * xMaxSpeed, rb.velocity.y);
+        }
+        xVelocity = rb.velocity.x;
     }
 
     void UpdateMovement()
@@ -43,12 +56,12 @@ public class PlayerController : MonoBehaviour
         if (xDirection > 0.5f) // move right
         {
             xVelocity += (acceleration * t);
-            if (xVelocity >= maxSpeed) xVelocity = maxSpeed;
+            if (xVelocity >= xMaxSpeed) xVelocity = xMaxSpeed;
         }
         else if (xDirection < -0.5f) // move left
         {
             xVelocity -= (acceleration * t);
-            if (xVelocity <= -maxSpeed) xVelocity = -maxSpeed;
+            if (xVelocity <= -xMaxSpeed) xVelocity = -xMaxSpeed;
         }
         else // slow -> stop
         {
@@ -68,9 +81,11 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(boxCollider.bounds.center, Vector2.down, boxCollider.bounds.extents.y + extraHeight, platformLayer);
-        Debug.DrawRay(boxCollider.bounds.center, Vector2.down * (boxCollider.bounds.extents.y + extraHeight), Color.green);
-        return hit.collider != null;
+        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + extraHeight, platformLayer);
+        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + extraHeight, platformLayer);
+        Debug.DrawRay(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + extraHeight), Color.green);
+        Debug.DrawRay(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + extraHeight), Color.green);
+        return (hitLeft.collider != null) || (hitRight.collider != null);
     }
 
     public void Jump() // simple jump, will fix later

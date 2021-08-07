@@ -383,10 +383,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boxCollider: {fileID: 1341618442}
-  acceleration: 3
+  acceleration: 10
   slideAccel: 2
   xVelocity: 0
-  maxSpeed: 3
+  xMaxSpeed: 5
   jumpPower: 8
   platformLayer:
     serializedVersion: 2
@@ -580,8 +580,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2110493017}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7299, y: 0, z: 0}
-  m_LocalScale: {x: 8.212186, y: 1, z: 1}
+  m_LocalPosition: {x: -12.7086, y: 0, z: 0}
+  m_LocalScale: {x: 29.176245, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
