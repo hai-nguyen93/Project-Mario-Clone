@@ -388,10 +388,12 @@ MonoBehaviour:
   xVelocity: 0
   xMaxSpeed: 5
   jumpPower: 8
+  jumpModifier: 0.4
+  jumpButtonDelay: 0.1
   platformLayer:
     serializedVersion: 2
     m_Bits: 64
-  extraHeight: 0.1
+  raycastExtraHeight: 0.1
 --- !u!1 &1341618439
 GameObject:
   m_ObjectHideFlags: 0

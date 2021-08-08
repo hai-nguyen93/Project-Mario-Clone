@@ -12,9 +12,14 @@ public class PlayerController : MonoBehaviour
     public float slideAccel = 2f; // acceleration for slow down
     public float xVelocity = 0f;
     public float xMaxSpeed = 3f;
+
+    [Header("Jump Stats")]
     public float jumpPower = 10f;
+    [Range(0f, 1f)] public float jumpModifier = 0.15f;
+    public float jumpButtonDelay = 0.1f;
+    private float jumpTimer;
     public LayerMask platformLayer;
-    public float extraHeight = 0.1f; // to check ground
+    public float raycastExtraHeight = 0.1f; // to check ground
 
 
     // Start is called before the first frame update
@@ -27,10 +32,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // UpdateMovement();
-
         // Jump
-        if (IsGrounded() && Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            jumpTimer = Time.time + jumpButtonDelay;
+        }
+        if (Input.GetKeyUp(KeyCode.W) && rb.velocity.y > 0)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpModifier);
+        }
+        if (IsGrounded() && jumpTimer > Time.time)
         {
             Jump();
         }
@@ -49,47 +60,18 @@ public class PlayerController : MonoBehaviour
         xVelocity = rb.velocity.x;
     }
 
-    void UpdateMovement()
-    {
-        float xDirection = Input.GetAxisRaw("Horizontal");
-        float t = Time.deltaTime;
-        if (xDirection > 0.5f) // move right
-        {
-            xVelocity += (acceleration * t);
-            if (xVelocity >= xMaxSpeed) xVelocity = xMaxSpeed;
-        }
-        else if (xDirection < -0.5f) // move left
-        {
-            xVelocity -= (acceleration * t);
-            if (xVelocity <= -xMaxSpeed) xVelocity = -xMaxSpeed;
-        }
-        else // slow -> stop
-        {
-            if (xVelocity > 0)
-            {
-                xVelocity -= (slideAccel * t);
-                if (xVelocity < 0f) xVelocity = 0f;
-            }
-            if (xVelocity < 0)
-            {
-                xVelocity += (slideAccel * t);
-                if (xVelocity > 0f) xVelocity = 0f;
-            }
-        }
-        transform.position += new Vector3(xVelocity * t, 0, 0);
-    }
-
     public bool IsGrounded()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + extraHeight, platformLayer);
-        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + extraHeight, platformLayer);
-        Debug.DrawRay(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + extraHeight), Color.green);
-        Debug.DrawRay(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + extraHeight), Color.green);
+        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        Debug.DrawRay(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
+        Debug.DrawRay(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
         return (hitLeft.collider != null) || (hitRight.collider != null);
     }
 
     public void Jump() // simple jump, will fix later
     {
-        rb.velocity = Vector2.up * jumpPower;
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
 }
