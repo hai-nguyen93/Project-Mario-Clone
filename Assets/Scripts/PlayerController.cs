@@ -6,14 +6,18 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     public BoxCollider2D boxCollider;
+    public int playerLevel = 1;
+    public bool facingRight = true;
+    public ParticleSystem dust;
 
     [Header("Movement Stats")]
     public float acceleration = 3f;
-    public float slideAccel = 2f; // acceleration for slow down
-    public float xVelocity = 0f;
-    public float xMaxSpeed = 3f;
+    public float walkSpeed = 5f;
+    public float sprintSpeed = 7f;
+    public float xMaxSpeed;
 
     [Header("Jump Stats")]
+    public bool onGround = false;
     public float jumpPower = 10f;
     [Range(0f, 1f)] public float jumpModifier = 0.15f;
     public float jumpButtonDelay = 0.1f;
@@ -26,12 +30,30 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        xVelocity = 0f;
+        xMaxSpeed = walkSpeed;
+        onGround = IsGrounded();
+        playerLevel = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Check if player is grounded
+        onGround = IsGrounded();
+
+        // Sprint
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (onGround)
+            {
+                xMaxSpeed = sprintSpeed;
+            }
+        }
+        else
+        {
+            xMaxSpeed = walkSpeed;
+        }
+
         // Jump
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -41,7 +63,7 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * jumpModifier);
         }
-        if (IsGrounded() && jumpTimer > Time.time)
+        if (onGround && jumpTimer > Time.time)
         {
             Jump();
         }
@@ -57,7 +79,10 @@ public class PlayerController : MonoBehaviour
         {
             rb.velocity = new Vector2( Mathf.Sign(rb.velocity.x) * xMaxSpeed, rb.velocity.y);
         }
-        xVelocity = rb.velocity.x;
+        if ((xDirection > 0 && !facingRight) || (xDirection < 0 && facingRight))
+        {
+            Flip(!facingRight);
+        }
     }
 
     public bool IsGrounded()
@@ -73,5 +98,27 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+    }
+
+    public void PlayerLevelUp()
+    {
+        ++playerLevel;
+    }
+
+    public Vector2 GetTopCenterCollisionPoint()
+    {
+        return new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y + boxCollider.bounds.extents.y);
+    }
+
+    public void Flip(bool right)
+    {
+        facingRight = right;
+        transform.rotation = Quaternion.Euler(0, right ? 0 : 180, 0);
+        CreateDust();
+    }
+
+    public void CreateDust()
+    {
+        dust.Play();
     }
 }
