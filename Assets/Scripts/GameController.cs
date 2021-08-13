@@ -35,14 +35,19 @@ public class GameController : MonoBehaviour
         lives = 3;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        UpdateScoreText();
     }
 
-    public void addScore(int value)
+    public void AddScore(int value)
     {
         score += value;
+        UpdateScoreText();
+    }
+
+    public void UpdateScoreText()
+    {
+        scoreText.text = "Score: " + score.ToString();
     }
 }
