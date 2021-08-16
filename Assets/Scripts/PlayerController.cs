@@ -6,9 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
     public BoxCollider2D boxCollider;
+
+    [Header("Player Settings")]
+    public bool isDead = false;
     public int playerLevel = 1;
     public bool facingRight = true;
     public ParticleSystem dust;
+    public Transform firePoint;
+    public PlayerBullet bulletPrefab;
 
     [Header("Movement Stats")]
     public float acceleration = 3f;
@@ -24,11 +29,14 @@ public class PlayerController : MonoBehaviour
     private float jumpTimer;
     public LayerMask platformLayer;
     public float raycastExtraHeight = 0.1f; // to check ground
+    [Range(0f, 1f)] public float rayCastXRelativeOffset = 0.9f;  // to prevent collision at corner
+    private float raycastXOffset;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        raycastXOffset = boxCollider.bounds.extents.x * rayCastXRelativeOffset;
         rb = GetComponent<Rigidbody2D>();
         xMaxSpeed = walkSpeed;
         onGround = IsGrounded();
@@ -67,6 +75,12 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+
+        // Fire
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FireBullet();
+        }
     }
 
     private void FixedUpdate()
@@ -87,10 +101,10 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
-        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
-        Debug.DrawRay(boxCollider.bounds.center - new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
-        Debug.DrawRay(boxCollider.bounds.center + new Vector3(boxCollider.bounds.extents.x, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
+        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        Debug.DrawRay(boxCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
+        Debug.DrawRay(boxCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
         return (hitLeft.collider != null) || (hitRight.collider != null);
     }
 
@@ -98,6 +112,12 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+    }
+    
+    public void FireBullet()
+    {
+        PlayerBullet b = Instantiate<PlayerBullet>(bulletPrefab, firePoint.position, Quaternion.identity);
+        b.SetDirection(facingRight, this);
     }
 
     public void PlayerLevelUp()

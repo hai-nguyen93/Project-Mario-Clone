@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour
     public static GameController instance;
 
     [Header("Game Settings")]
-    public float deadY = -1f; // kill player, enemies if y < deadY 
+    public float deadY = -3f; // kill player, enemies if y < deadY 
 
     [Header("Player's stats")]
     public int score = 0;
@@ -40,6 +40,14 @@ public class GameController : MonoBehaviour
         UpdateScoreText();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
+        }
+    }
+
     public void AddScore(int value)
     {
         score += value;
@@ -49,5 +57,10 @@ public class GameController : MonoBehaviour
     public void UpdateScoreText()
     {
         scoreText.text = "Score: " + score.ToString();
+    }
+
+    public void PauseGame()
+    {
+
     }
 }

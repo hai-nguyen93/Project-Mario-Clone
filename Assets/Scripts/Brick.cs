@@ -8,7 +8,7 @@ public class Brick : InteractableTile
 
     public override void OnInteract()
     {
-        Instantiate(breakPS);
+        Instantiate(breakPS, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }

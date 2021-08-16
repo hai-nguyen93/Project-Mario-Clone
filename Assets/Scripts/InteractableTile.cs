@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Base class for tiles that player interacts with from below (brick, item box, ...)
 public class InteractableTile : MonoBehaviour
 {
-    public BoxCollider2D bc;
+    private BoxCollider2D bc;
     [Range(0f, 1f)] public float hitXRelativeOffset = 0.8f;
     protected float hitXOffset;
 
@@ -16,7 +17,7 @@ public class InteractableTile : MonoBehaviour
 
     public virtual void OnInteract()
     {
-        Debug.Log("parent's OnInteract");
+        Debug.Log("parent's OnInteract()");
         return;
     }
 
