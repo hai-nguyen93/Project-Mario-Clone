@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Player Settings")]
     public bool isDead = false;
-    public int playerLevel = 1;
+    public int playerLevel = 1; // 1=small; 2=big; 3=fire
     public bool facingRight = true;
     public ParticleSystem dust;
     public Transform firePoint;
@@ -117,12 +117,7 @@ public class PlayerController : MonoBehaviour
     public void FireBullet()
     {
         PlayerBullet b = Instantiate<PlayerBullet>(bulletPrefab, firePoint.position, Quaternion.identity);
-        b.SetDirection(facingRight, this);
-    }
-
-    public void PlayerLevelUp()
-    {
-        ++playerLevel;
+        b.SetDirection(facingRight);
     }
 
     public Vector2 GetTopCenterCollisionPoint()

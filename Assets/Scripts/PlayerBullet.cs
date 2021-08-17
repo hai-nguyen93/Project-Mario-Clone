@@ -10,14 +10,12 @@ public class PlayerBullet : MonoBehaviour
     public float yForce = 3f;
     public float timeToLive = 3f;
     private float timer;
-    public PlayerController pc;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         xVel = xSpeed;
-        timer = timeToLive;
-        if (pc != null) Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), pc.boxCollider); // for testing with non-prefab bullet
+        timer = timeToLive;        
     }
 
     private void Start()
@@ -40,12 +38,10 @@ public class PlayerBullet : MonoBehaviour
         rb.velocity = new Vector2(xVel, rb.velocity.y);    
     }
 
-    public void SetDirection(bool facingRight, PlayerController _pc)
+    public void SetDirection(bool facingRight)
     {
-        pc = _pc;
         xVel = facingRight ? xSpeed : -xSpeed;
         rb.velocity = new Vector2(xVel, 0);
-        Physics2D.IgnoreCollision(GetComponent<BoxCollider2D>(), pc.boxCollider);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

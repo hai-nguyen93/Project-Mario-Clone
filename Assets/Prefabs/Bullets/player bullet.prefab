@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7328142766215667029}
   - component: {fileID: 7328142766215667030}
   - component: {fileID: 7328142766215667034}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: player bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,6 +101,7 @@ MonoBehaviour:
   xSpeed: 7
   yForce: 4
   timeToLive: 3
+  pc: {fileID: 0}
 --- !u!50 &7328142766215667030
 Rigidbody2D:
   serializedVersion: 4
