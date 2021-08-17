@@ -8,6 +8,9 @@ public class EnemyGoomba : EnemyBase
     public bool facingRight = false;
     public float speed = 3f;
     private float xVel;
+    public Transform forwardDetection;
+    public float forwardDetectRange = 0.05f;
+    public LayerMask layerToDetect;
 
     private void Awake()
     {
@@ -29,7 +32,13 @@ public class EnemyGoomba : EnemyBase
     // Update is called once per frame
     void Update()
     {
-        
+        // Change direction if hit something in front of this enemy
+        Debug.DrawLine(forwardDetection.position, forwardDetection.position + new Vector3((facingRight ? 1 : -1) * forwardDetectRange, 0, 0));
+        var hit = Physics2D.Raycast(forwardDetection.position, new Vector2(facingRight ? 1 : -1, 0), forwardDetectRange, layerToDetect);
+        if (hit)
+        {
+            Flip();
+        }
     }
 
     public override void Flip()

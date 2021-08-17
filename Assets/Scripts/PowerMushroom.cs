@@ -8,29 +8,24 @@ public class PowerMushroom : MonoBehaviour
     public float speed = 2f;
     private float xVel;
     private Rigidbody2D rb;
-    public float xCollisionDetectionRadius = 0.05f;
-    public LayerMask layersToCollide;
-    private SpriteRenderer sr;
+    public Transform forwardDetection;
+    public float forwardDetectionRange = 0.05f;
+    public LayerMask layersToDetect;
 
     private void Awake()
     {
         xVel = speed;
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector2 centerLeft = new Vector2(sr.bounds.center.x - sr.bounds.extents.x, sr.bounds.center.y);
-        Vector2 centerRight = new Vector2(sr.bounds.center.x + sr.bounds.extents.x, sr.bounds.center.y);
-        Debug.DrawLine(centerLeft, centerLeft + new Vector2(xCollisionDetectionRadius, 0));
-        Debug.DrawLine(centerRight, centerRight + new Vector2(xCollisionDetectionRadius, 0));
-
-        if (Physics2D.OverlapCircle(centerLeft, xCollisionDetectionRadius, layersToCollide) ||
-            Physics2D.OverlapCircle(centerRight, xCollisionDetectionRadius, layersToCollide))
+        Debug.DrawLine(forwardDetection.position, forwardDetection.position + new Vector3(Mathf.Sign(xVel)*forwardDetectionRange,0,0));
+        var hit = Physics2D.Raycast(forwardDetection.position, new Vector2(Mathf.Sign(xVel), 0), forwardDetectionRange, layersToDetect);
+        if (hit)
         {
-            xVel = -xVel;
+            Flip();
         }
     }
 
@@ -39,7 +34,7 @@ public class PowerMushroom : MonoBehaviour
         rb.velocity = new Vector2(xVel, rb.velocity.y);
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -48,5 +43,11 @@ public class PowerMushroom : MonoBehaviour
             GameController.instance.AddScore(scoreValue);
             Destroy(gameObject);
         }
+    }
+
+    public void Flip()
+    {
+        xVel = -xVel;
+        transform.rotation = Quaternion.Euler(0, Mathf.Sign(xVel) == 1 ? 0 : 180, 0);
     }
 }
