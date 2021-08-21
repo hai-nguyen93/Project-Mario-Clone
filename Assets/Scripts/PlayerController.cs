@@ -5,7 +5,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    public BoxCollider2D boxCollider;
+    public BoxCollider2D smallCollider;
+    public BoxCollider2D bigCollider;
+    private BoxCollider2D currCollider;
+    
 
     [Header("Player Settings")]
     public bool isDead = false;
@@ -32,15 +35,25 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 1f)] public float rayCastXRelativeOffset = 0.9f;  // to prevent collision at corner
     private float raycastXOffset;
 
+    private void Awake()
+    {
+        currCollider = smallCollider;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        raycastXOffset = boxCollider.bounds.extents.x * rayCastXRelativeOffset;
+        raycastXOffset = currCollider.bounds.extents.x * rayCastXRelativeOffset;
         rb = GetComponent<Rigidbody2D>();
         xMaxSpeed = walkSpeed;
         onGround = IsGrounded();
         playerLevel = 1;
+
+        // Set collider
+        if (playerLevel == 1)
+            currCollider = smallCollider;
+        else
+            currCollider = bigCollider;
     }
 
     // Update is called once per frame
@@ -101,10 +114,10 @@ public class PlayerController : MonoBehaviour
 
     public bool IsGrounded()
     {
-        RaycastHit2D hitLeft = Physics2D.Raycast(boxCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
-        RaycastHit2D hitRight = Physics2D.Raycast(boxCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down, boxCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
-        Debug.DrawRay(boxCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
-        Debug.DrawRay(boxCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down * (boxCollider.bounds.extents.y + raycastExtraHeight), Color.green);
+        RaycastHit2D hitLeft = Physics2D.Raycast(currCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down, currCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        RaycastHit2D hitRight = Physics2D.Raycast(currCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down, currCollider.bounds.extents.y + raycastExtraHeight, platformLayer);
+        Debug.DrawRay(currCollider.bounds.center - new Vector3(raycastXOffset, 0, 0), Vector2.down * (currCollider.bounds.extents.y + raycastExtraHeight), Color.green);
+        Debug.DrawRay(currCollider.bounds.center + new Vector3(raycastXOffset, 0, 0), Vector2.down * (currCollider.bounds.extents.y + raycastExtraHeight), Color.green);
         return (hitLeft.collider != null) || (hitRight.collider != null);
     }
 
@@ -122,7 +135,7 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 GetTopCenterCollisionPoint()
     {
-        return new Vector2(boxCollider.bounds.center.x, boxCollider.bounds.center.y + boxCollider.bounds.extents.y);
+        return new Vector2(currCollider.bounds.center.x, currCollider.bounds.center.y + currCollider.bounds.extents.y);
     }
 
     public void Flip(bool right)
@@ -135,5 +148,29 @@ public class PlayerController : MonoBehaviour
     public void CreateDust()
     {
         dust.Play();
+    }
+
+    public void PipeTeleport(Transform dest, bool isDestinationPipe)
+    {
+        StartCoroutine(CoroutinePipeTeleport(dest.position, 0.5f));        
+    }
+
+    IEnumerator CoroutinePipeTeleport(Vector2 dest, float duration)
+    {
+        rb.isKinematic = true;
+        currCollider.enabled = false;
+        Vector2 startPos = transform.position;
+
+        float t = duration;
+        while (t > 0)
+        {
+            transform.position = Vector2.Lerp(startPos, startPos + new Vector2(0, -1), (duration - t) / duration) ;
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = dest;
+        rb.isKinematic = false;
+        currCollider.enabled = true;
     }
 }
