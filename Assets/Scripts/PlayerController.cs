@@ -152,25 +152,40 @@ public class PlayerController : MonoBehaviour
 
     public void PipeTeleport(Transform dest, bool isDestinationPipe)
     {
-        StartCoroutine(CoroutinePipeTeleport(dest.position, 0.5f));        
+        StartCoroutine(CoroutinePipeTeleport(dest.position, 0.5f, isDestinationPipe));        
     }
 
-    IEnumerator CoroutinePipeTeleport(Vector2 dest, float duration)
+    IEnumerator CoroutinePipeTeleport(Vector2 dest, float duration, bool isDestinationPipe)
     {
         rb.isKinematic = true;
         currCollider.enabled = false;
-        Vector2 startPos = transform.position;
+        //Vector2 startPos = transform.position;
+        
+        // Enter Pipe
+        yield return EnterExitPipe(transform.position, transform.position + new Vector3(0, -1, 0), duration);
 
+
+        // Exit Pipe
+        if (isDestinationPipe)
+        {
+            yield return EnterExitPipe(dest - new Vector2(0, 1), dest, duration);
+        }
+        else
+        {
+            transform.position = dest;
+        }
+        rb.isKinematic = false;
+        currCollider.enabled = true;
+    }
+
+    IEnumerator EnterExitPipe(Vector2 start, Vector2 end, float duration)
+    {
         float t = duration;
         while (t > 0)
         {
-            transform.position = Vector2.Lerp(startPos, startPos + new Vector2(0, -1), (duration - t) / duration) ;
+            transform.position = Vector2.Lerp(start, end, (duration - t) / duration);
             t -= Time.deltaTime;
             yield return null;
         }
-
-        transform.position = dest;
-        rb.isKinematic = false;
-        currCollider.enabled = true;
     }
 }

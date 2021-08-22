@@ -5,6 +5,8 @@ using UnityEngine;
 // Base class for enemies
 public class EnemyBase : MonoBehaviour
 {
+    public int scoreValue = 100;
+
     // Start is called before the first frame update
     void Start()
     {
