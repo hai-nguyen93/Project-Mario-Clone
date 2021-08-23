@@ -490,6 +490,7 @@ MonoBehaviour:
   score: 0
   lives: 3
   scoreText: {fileID: 2101897573}
+  scoreParticle: {fileID: 4933586637858433868, guid: f8e2a05ee8690d048af27efb0c55c375, type: 3}
   pauseScreen: {fileID: 1041767523}
 --- !u!4 &107726455
 Transform:
@@ -5796,7 +5797,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.4333334, y: 2.59, z: -10}
+  m_LocalPosition: {x: -1.9, y: 2.59, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -7043,7 +7044,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1291151440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.4333334, y: 2.59, z: -10}
+  m_LocalPosition: {x: -1.9, y: 2.59, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1497765020}
@@ -7505,15 +7506,15 @@ MonoBehaviour:
   m_YDamping: 1
   m_ZDamping: 1
   m_TargetMovementOnly: 1
-  m_ScreenX: 0.2
+  m_ScreenX: 0.5
   m_ScreenY: 0.5
   m_CameraDistance: 10
-  m_DeadZoneWidth: 0.48
-  m_DeadZoneHeight: 2
+  m_DeadZoneWidth: 0
+  m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
   m_UnlimitedSoftZone: 0
-  m_SoftZoneWidth: 0.48
-  m_SoftZoneHeight: 2
+  m_SoftZoneWidth: 0.8
+  m_SoftZoneHeight: 0.8
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1

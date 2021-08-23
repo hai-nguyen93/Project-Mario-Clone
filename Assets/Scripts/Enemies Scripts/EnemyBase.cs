@@ -20,4 +20,15 @@ public class EnemyBase : MonoBehaviour
     }
 
     public virtual void Flip() { }
+
+    public virtual void OnBulletHit()
+    {
+        Die();
+    }
+
+    public virtual void Die()
+    {
+        GameController.instance.AddScore(scoreValue, transform);
+        Destroy(gameObject);
+    }
 }

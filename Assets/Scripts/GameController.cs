@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
 
     [Header("UI items")]
     public TextMeshProUGUI scoreText;
+    public ParticleSystem scoreParticle;
     public GameObject pauseScreen;
     private bool isPaused = false;
     private bool isInScreenTransition = false;
@@ -60,8 +61,14 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void AddScore(int value)
+    public void AddScore(int value, Transform particlePos = null)
     {
+        if (particlePos)
+        {
+            var p = Instantiate(scoreParticle, particlePos.position, Quaternion.identity);
+            p.transform.parent = null;
+            p.GetComponent<ParticleToUI>().destinationUI = scoreText.rectTransform;
+        }
         score += value;
         UpdateScoreText();
     }

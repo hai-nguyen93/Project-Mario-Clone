@@ -48,6 +48,7 @@ public class PlayerBullet : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Platform"))
         {
+            // bounce up if bullet touches ground
             var hitNormal = collision.GetContact(0).normal;
             if (hitNormal.y > 0.5f)
             {
@@ -55,6 +56,25 @@ public class PlayerBullet : MonoBehaviour
                 return;
             }          
         }
+
+        //if (collision.gameObject.CompareTag("Enemy"))
+        //{
+        //    EnemyBase e = collision.collider.transform.root.GetComponent<EnemyBase>();
+        //    e.OnBulletHit();
+        //}
+                   
+        Destroy(gameObject);
+    }
+
+    // All enemies should have EnemyHitBox component for this to work
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyBase e = collision.transform.root.GetComponent<EnemyBase>();
+            e.OnBulletHit();
+        }
+
         Destroy(gameObject);
     }
 }
