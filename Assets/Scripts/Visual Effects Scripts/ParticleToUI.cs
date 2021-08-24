@@ -22,7 +22,6 @@ public class ParticleToUI : MonoBehaviour
     {
         int numParticlesAlive = ps.GetParticles(particles);
         destination = transform.InverseTransformPoint(Camera.main.ScreenToWorldPoint(destinationUI.transform.position));
-        Debug.Log(destination);
 
         // get original particles' position
         if (first)

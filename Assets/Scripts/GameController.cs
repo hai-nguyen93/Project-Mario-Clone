@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameController : MonoBehaviour
@@ -10,6 +11,8 @@ public class GameController : MonoBehaviour
 
     [Header("Game Settings")]
     public float deadY = -3f; // kill player, enemies if y < deadY 
+    public float timeLimit = 100f; ///in seconds
+    private float timer;
 
     [Header("Player's stats")]
     public int score = 0;
@@ -17,9 +20,11 @@ public class GameController : MonoBehaviour
 
 
     [Header("UI items")]
+    public TextMeshProUGUI timeText;
     public TextMeshProUGUI scoreText;
-    public ParticleSystem scoreParticle;
+    public ParticleSystem scoreParticlePrefab;
     public GameObject pauseScreen;
+    public GameObject gameOverScreen;
     private bool isPaused = false;
     private bool isInScreenTransition = false;
 
@@ -38,9 +43,11 @@ public class GameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         score = 0;
         lives = 3;
+        timer = timeLimit;
 
         // Initialize UI items
         pauseScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
         isPaused = false;
         isInScreenTransition = false;
     }
@@ -52,12 +59,35 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        // update timer
+        if (timer < 0)
+        {
+            if (!gameOverScreen.activeSelf)
+                GameOver();
+        }
+        else
+            timer -= Time.deltaTime;
+        timeText.text = "Time: " + Mathf.RoundToInt(timer);
+
         if (Input.GetKeyDown(KeyCode.Escape) && !isInScreenTransition)
         {
-            if (!isPaused) 
-                PauseGame();
+            if (gameOverScreen.activeSelf)
+            {
+                // reset UI then restart game
+                pauseScreen.SetActive(false);
+                gameOverScreen.SetActive(false);
+                isPaused = false;
+                isInScreenTransition = false;
+                timer = timeLimit;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
             else
-                ResumeGame();
+            {
+                if (!isPaused)
+                    PauseGame();
+                else
+                    ResumeGame();
+            }
         }
     }
 
@@ -65,7 +95,7 @@ public class GameController : MonoBehaviour
     {
         if (particlePos)
         {
-            var p = Instantiate(scoreParticle, particlePos.position, Quaternion.identity);
+            var p = Instantiate(scoreParticlePrefab, particlePos.position, Quaternion.identity);
             p.transform.parent = null;
             p.GetComponent<ParticleToUI>().destinationUI = scoreText.rectTransform;
         }
@@ -91,6 +121,13 @@ public class GameController : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         pauseScreen.SetActive(false);
+    }
+
+    public void GameOver()
+    {
+        gameOverScreen.SetActive(true);
+        Destroy(FindObjectOfType<PlayerController>().gameObject);
+        StartCoroutine(FadePanel(0.5f, gameOverScreen.GetComponent<Image>(), 0f, 0.75f));
     }
 
     IEnumerator FadePanel(float duration, Image panelToFade, float startAlpha, float finalAlpha)
