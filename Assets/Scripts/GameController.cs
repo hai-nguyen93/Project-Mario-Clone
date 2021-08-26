@@ -5,19 +5,17 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+public enum GameState { Playing, Paused}
+
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
 
     [Header("Game Settings")]
+    public GameState gameState; 
     public float deadY = -3f; // kill player, enemies if y < deadY 
     public float timeLimit = 100f; ///in seconds
     private float timer;
-
-    [Header("Player's stats")]
-    public int score = 0;
-    public int lives = 3;
-
 
     [Header("UI items")]
     public TextMeshProUGUI timeText;
@@ -25,6 +23,7 @@ public class GameController : MonoBehaviour
     public ParticleSystem scoreParticlePrefab;
     public GameObject pauseScreen;
     public GameObject gameOverScreen;
+    public GameObject loadScreen;
     private bool isPaused = false;
     private bool isInScreenTransition = false;
 
@@ -40,9 +39,6 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
-        score = 0;
-        lives = 3;
         timer = timeLimit;
 
         // Initialize UI items
@@ -55,6 +51,7 @@ public class GameController : MonoBehaviour
     private void Start()
     {
         UpdateScoreText();
+        StartCoroutine(StartScene());
     }
 
     private void Update()
@@ -73,13 +70,7 @@ public class GameController : MonoBehaviour
         {
             if (gameOverScreen.activeSelf)
             {
-                // reset UI then restart game
-                pauseScreen.SetActive(false);
-                gameOverScreen.SetActive(false);
-                isPaused = false;
-                isInScreenTransition = false;
-                timer = timeLimit;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                ResetLevel();
             }
             else
             {
@@ -99,13 +90,13 @@ public class GameController : MonoBehaviour
             p.transform.parent = null;
             p.GetComponent<ParticleToUI>().destinationUI = scoreText.rectTransform;
         }
-        score += value;
+        GameData.instance.score += value;
         UpdateScoreText();
     }
 
     public void UpdateScoreText()
     {
-        scoreText.text = "Score: " + score.ToString();
+        scoreText.text = "Score: " + GameData.instance.score.ToString();
     }
 
     public void PauseGame()
@@ -130,6 +121,15 @@ public class GameController : MonoBehaviour
         StartCoroutine(FadePanel(0.5f, gameOverScreen.GetComponent<Image>(), 0f, 0.75f));
     }
 
+    public void ResetLevel()
+    {
+        pauseScreen.SetActive(false);
+        gameOverScreen.SetActive(false);
+        isPaused = false;
+        timer = timeLimit;
+        StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex));
+    }
+
     IEnumerator FadePanel(float duration, Image panelToFade, float startAlpha, float finalAlpha)
     {
         isInScreenTransition = true;
@@ -138,6 +138,56 @@ public class GameController : MonoBehaviour
         {
             panelToFade.color = new Color(panelToFade.color.r, panelToFade.color.g, panelToFade.color.b, Mathf.Lerp(startAlpha, finalAlpha, (duration - t) / duration));
             t -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+        isInScreenTransition = false;
+    }
+
+    IEnumerator StartScene()
+    {
+        // Set up load screen
+        Time.timeScale = 0f;
+        loadScreen.SetActive(true);
+        isInScreenTransition = true;
+        
+        // wait for screen transition
+        yield return new WaitForSecondsRealtime(0.25f);
+        float duration = 0.25f;
+        float t = duration;
+        while (t > 0)
+        {
+            loadScreen.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(1f, 0f, (duration - t) / duration);
+            t -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+        isInScreenTransition = false;
+
+        // resume game
+        Time.timeScale = 1f;
+        loadScreen.SetActive(false);
+    }
+
+    IEnumerator LoadScene(int sceneIndex)
+    {
+        // pause game, prepare load screen
+        Time.timeScale = 0f;
+        loadScreen.SetActive(true);
+        isInScreenTransition = true;
+
+        // transition to load screen
+        float duration = 0.25f;
+        float t = duration;
+        while (t > 0)
+        {
+            loadScreen.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(0.7f, 1f, (duration - t) / duration);
+            t -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        // load new scene in background
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneIndex, LoadSceneMode.Single);
+        while (!op.isDone)
+        {
             yield return null;
         }
         isInScreenTransition = false;
