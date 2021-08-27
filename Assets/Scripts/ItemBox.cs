@@ -17,7 +17,7 @@ public class ItemBox : InteractableTile
     {
 
     }
-    public override void OnInteract()
+    public override void OnInteract(PlayerController pc)
     {
         //TODO 
         return;

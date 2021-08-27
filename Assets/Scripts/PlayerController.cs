@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    public BoxCollider2D smallCollider;
-    public BoxCollider2D bigCollider;
+    public GameObject smallMario;
+    public GameObject bigMario;
     private BoxCollider2D currCollider;
     
 
@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        currCollider = smallCollider;
+        SetPlayerLevel(1);
     }
 
     // Start is called before the first frame update
@@ -46,14 +46,7 @@ public class PlayerController : MonoBehaviour
         raycastXOffset = currCollider.bounds.extents.x * rayCastXRelativeOffset;
         rb = GetComponent<Rigidbody2D>();
         xMaxSpeed = walkSpeed;
-        onGround = IsGrounded();
-        playerLevel = 1;
-
-        // Set collider
-        if (playerLevel == 1)
-            currCollider = smallCollider;
-        else
-            currCollider = bigCollider;
+        onGround = IsGrounded();      
     }
 
     // Update is called once per frame
@@ -148,6 +141,28 @@ public class PlayerController : MonoBehaviour
     public void CreateDust()
     {
         dust.Play();
+    }
+
+    public void SetPlayerLevel(int level)
+    {
+        playerLevel = level;
+        UpdateMesh(); 
+    }
+
+    public void UpdateMesh()
+    {
+        if (playerLevel == 1)
+        {
+            smallMario.SetActive(true);
+            bigMario.SetActive(false);
+            currCollider = smallMario.GetComponent<BoxCollider2D>();
+        }
+        else // player level > 1
+        {
+            smallMario.SetActive(false);
+            bigMario.SetActive(true);
+            currCollider = bigMario.GetComponent<BoxCollider2D>();
+        }
     }
 
     public void PipeTeleport(Transform dest, bool isDestinationPipe)

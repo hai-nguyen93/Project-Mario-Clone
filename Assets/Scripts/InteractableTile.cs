@@ -5,7 +5,7 @@ using UnityEngine;
 // Base class for tiles that player interacts with from below (brick, item box, ...)
 public class InteractableTile : MonoBehaviour
 {
-    private BoxCollider2D bc;
+    protected BoxCollider2D bc;
     [Range(0f, 1f)] public float hitXRelativeOffset = 0.8f;
     protected float hitXOffset;
 
@@ -15,7 +15,7 @@ public class InteractableTile : MonoBehaviour
         hitXOffset = bc.bounds.extents.x * hitXRelativeOffset;
     }
 
-    public virtual void OnInteract()
+    public virtual void OnInteract(PlayerController pc)
     {
         Debug.Log("parent's OnInteract()");
         return;
@@ -28,7 +28,7 @@ public class InteractableTile : MonoBehaviour
             Vector2 hitPosition = collision.gameObject.GetComponent<PlayerController>().GetTopCenterCollisionPoint();
             if (hitPosition.y < bc.bounds.center.y && hitPosition.x <= (bc.bounds.center.x + hitXOffset) && hitPosition.x >= (bc.bounds.center.x - hitXOffset))
             {
-                OnInteract();
+                OnInteract(collision.gameObject.GetComponent<PlayerController>());
             }
         }
     }

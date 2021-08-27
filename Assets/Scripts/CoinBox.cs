@@ -20,7 +20,7 @@ public class CoinBox : ItemBox
         
     }
 
-    public override void OnInteract()
+    public override void OnInteract(PlayerController pc)
     {
         if (numberOfCoins > 0)
         {

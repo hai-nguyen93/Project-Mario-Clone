@@ -39,7 +39,7 @@ public class PowerMushroom : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             var pc = collision.gameObject.GetComponentInParent<PlayerController>();
-            if (pc && pc.playerLevel < 2) pc.playerLevel = 2;
+            if (pc && pc.playerLevel < 2) pc.SetPlayerLevel(2);
             GameController.instance.AddScore(scoreValue);
             Destroy(gameObject);
         }
