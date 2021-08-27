@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyGoomba : EnemyBase
 {
-    private Rigidbody2D rb;
     public bool facingRight = false;
     public float speed = 3f;
     private float xVel;
@@ -12,10 +11,6 @@ public class EnemyGoomba : EnemyBase
     public float forwardDetectRange = 0.05f;
     public LayerMask layerToDetect;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +21,8 @@ public class EnemyGoomba : EnemyBase
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector2(xVel, rb.velocity.y);
+        if (!isDead)
+            rb.velocity = new Vector2(xVel, rb.velocity.y);
     }
 
     // Update is called once per frame
