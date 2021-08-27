@@ -54,20 +54,20 @@ public class EnemyBase : MonoBehaviour
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
         bc.enabled = false;
+        sr.material = m_dissolve;
         StartCoroutine(BurnToDeath());
     }
 
     IEnumerator BurnToDeath()
     {
-        sr.material = m_dissolve;
         float t = burnTime;
-        float fade = 1f;
+        float fade = 0.6f;
         while (t > 0)
         {
-            fade = Mathf.Lerp(1f, 0f, (burnTime - t) / burnTime);
+            t -= Time.deltaTime;
+            fade = Mathf.Lerp(0.7f, 0f, (burnTime - t) / burnTime);
             sr.material.SetFloat("_Fade", fade);
             yield return null;
-            t -= Time.deltaTime;
         }
         Die();
     }

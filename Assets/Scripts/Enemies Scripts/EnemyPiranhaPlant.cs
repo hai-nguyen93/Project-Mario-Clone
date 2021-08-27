@@ -28,6 +28,8 @@ public class EnemyPiranhaPlant : EnemyBase
     // Update is called once per frame
     void Update()
     {
+        if (isDead) return;
+
         // Moving
         if (timer <= 0)
         {
