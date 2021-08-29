@@ -6791,6 +6791,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smallMario: {fileID: 1341618439}
   bigMario: {fileID: 121666326}
+  godMode: 0
+  godModeDuration: 10
+  undamagable: 0
+  undamagableDuration: 1
   isDead: 0
   playerLevel: 1
   facingRight: 1

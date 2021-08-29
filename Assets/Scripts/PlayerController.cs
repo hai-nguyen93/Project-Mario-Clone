@@ -8,9 +8,14 @@ public class PlayerController : MonoBehaviour
     public GameObject smallMario;
     public GameObject bigMario;
     private BoxCollider2D currCollider;
-    
+    private SpriteRenderer sr;
+
 
     [Header("Player Settings")]
+    public bool godMode = false; /// god mode when eating star
+    public float godModeDuration = 10f;
+    public bool undamagable = false; // i-frame after getting hit
+    public float undamagableDuration = 1f;
     public bool isDead = false;
     public int playerLevel = 1; // 1=small; 2=big; 3=fire
     public bool facingRight = true;
@@ -46,6 +51,8 @@ public class PlayerController : MonoBehaviour
         raycastXOffset = currCollider.bounds.extents.x * rayCastXRelativeOffset;
         rb = GetComponent<Rigidbody2D>();
         xMaxSpeed = walkSpeed;
+        godMode = false;
+        undamagable = false;
         onGround = IsGrounded();      
     }
 
@@ -87,6 +94,12 @@ public class PlayerController : MonoBehaviour
         {
             FireBullet();
         }
+
+        // God mode test
+        if (Input.GetKeyDown(KeyCode.G) && !godMode)
+        {
+            EnterGodMode();
+        }
     }
 
     private void FixedUpdate()
@@ -103,6 +116,26 @@ public class PlayerController : MonoBehaviour
         {
             Flip(!facingRight);
         }
+    }
+
+    public void Damage()
+    {
+        if (undamagable) return;
+
+        if (playerLevel > 1)
+        {
+            SetPlayerLevel(1);
+            StartCoroutine(IsBeingDamaged());
+        }
+        else
+        {
+            Debug.Log("Player dies");
+        }
+    }
+
+    public void EnterGodMode()
+    {
+        StartCoroutine(IsInGodMode());
     }
 
     public bool IsGrounded()
@@ -163,6 +196,8 @@ public class PlayerController : MonoBehaviour
             bigMario.SetActive(true);
             currCollider = bigMario.GetComponent<BoxCollider2D>();
         }
+
+        sr = currCollider.gameObject.GetComponent<SpriteRenderer>();
     }
 
     public void PipeTeleport(Transform dest, bool isDestinationPipe)
@@ -202,5 +237,53 @@ public class PlayerController : MonoBehaviour
             t -= Time.deltaTime;
             yield return null;
         }
+    }
+
+    IEnumerator IsBeingDamaged()
+    {
+        undamagable = true;
+        float t = undamagableDuration;
+        float flashingDuration = 0.15f;
+        float flashingTimer = flashingDuration;
+        while (t > 0)
+        {
+            if (flashingTimer < 0)
+            {
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, (sr.color.a > 0.5f) ? 0f : 1f);
+                flashingTimer = flashingDuration;
+            }
+
+            flashingTimer -= Time.deltaTime;
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1f);
+        undamagable = false;
+    }
+
+    IEnumerator IsInGodMode()
+    {
+        godMode = true;
+        float t = godModeDuration;
+        float tintDuration = 0.25f;
+        float tintTimer = tintDuration;
+        Color originalColor = sr.color;
+        Color.RGBToHSV(originalColor, out _, out _, out float v) ;
+        float s = 1f;
+        float h = 0f;
+        float destH = 100f / 360f;
+        while (t > 0)
+        {
+            if (tintTimer < -tintDuration) tintTimer = tintDuration;
+            sr.color = Color.HSVToRGB(Mathf.Lerp(h, destH, (tintDuration - Mathf.Abs(tintTimer)) / tintDuration), s, v);
+
+            tintTimer -= Time.deltaTime;
+            t -= Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = originalColor;
+        godMode = false;
     }
 }

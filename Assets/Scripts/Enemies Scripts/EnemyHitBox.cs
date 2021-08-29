@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Damage Player if hit
@@ -7,9 +5,13 @@ public class EnemyHitBox : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.attachedRigidbody.CompareTag("Player"))
+        var pc = collision.attachedRigidbody.GetComponent<PlayerController>();
+        if (pc)
         {
-            Debug.Log("Player: Ui daaa!!");
+            if (pc.godMode)
+                transform.root.GetComponent<EnemyBase>().Burn();
+            else
+                pc.Damage();
         }
     }
 }
