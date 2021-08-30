@@ -39,7 +39,7 @@ public class Brick : InteractableTile
 
         // move up
         float t = budgeDuration;
-        while (t > 0)
+        while (t >= 0)
         {
             transform.position = Vector2.Lerp(start, dest, (budgeDuration - t) / budgeDuration);
             yield return null;
@@ -48,7 +48,7 @@ public class Brick : InteractableTile
 
         // move down
         t = budgeDuration;
-        while (t > 0)
+        while (t >= 0)
         {
             transform.position = Vector2.Lerp(dest, start, (budgeDuration - t) / budgeDuration);
             yield return null;

@@ -62,7 +62,7 @@ public class EnemyBase : MonoBehaviour
     {
         float t = burnTime;
         float fade = 0.6f;
-        while (t > 0)
+        while (t >= 0)
         {
             t -= Time.deltaTime;
             fade = Mathf.Lerp(0.7f, 0f, (burnTime - t) / burnTime);

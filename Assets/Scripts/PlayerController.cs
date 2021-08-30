@@ -10,11 +10,10 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D currCollider;
     private SpriteRenderer sr;
 
-
-    [Header("Player Settings")]
+    [Header("Player Settings")]    
     public bool godMode = false; /// god mode when eating star
     public float godModeDuration = 10f;
-    public bool undamagable = false; // i-frame after getting hit
+    public bool undamagable = false; // i-fram after getting hit
     public float undamagableDuration = 1f;
     public bool isDead = false;
     public int playerLevel = 1; // 1=small; 2=big; 3=fire
@@ -26,7 +25,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Stats")]
     public float acceleration = 3f;
     public float walkSpeed = 5f;
-    public float sprintSpeed = 7f;
+    public float sprintSpeed = 7f;      
     public float xMaxSpeed;
 
     [Header("Jump Stats")]
@@ -59,6 +58,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameController.instance.gameState != GameState.Playing) return;
+
         // Check if player is grounded
         onGround = IsGrounded();
 
@@ -104,6 +105,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameController.instance.gameState != GameState.Playing) return;
+
         // move X direction
         float xDirection = Input.GetAxisRaw("Horizontal");
         rb.AddForce(Vector2.right * xDirection * acceleration);
@@ -136,6 +139,11 @@ public class PlayerController : MonoBehaviour
     public void EnterGodMode()
     {
         StartCoroutine(IsInGodMode());
+    }
+
+    public SpriteRenderer GetSpriteRenderer()
+    {
+        return sr;
     }
 
     public bool IsGrounded()
@@ -231,7 +239,7 @@ public class PlayerController : MonoBehaviour
     IEnumerator EnterExitPipe(Vector2 start, Vector2 end, float duration)
     {
         float t = duration;
-        while (t > 0)
+        while (t >= 0)
         {
             transform.position = Vector2.Lerp(start, end, (duration - t) / duration);
             t -= Time.deltaTime;
@@ -245,7 +253,7 @@ public class PlayerController : MonoBehaviour
         float t = undamagableDuration;
         float flashingDuration = 0.15f;
         float flashingTimer = flashingDuration;
-        while (t > 0)
+        while (t >= 0)
         {
             if (flashingTimer < 0)
             {
@@ -273,7 +281,7 @@ public class PlayerController : MonoBehaviour
         float s = 1f;
         float h = 0f;
         float destH = 100f / 360f;
-        while (t > 0)
+        while (t >= 0)
         {
             if (tintTimer < -tintDuration) tintTimer = tintDuration;
             sr.color = Color.HSVToRGB(Mathf.Lerp(h, destH, (tintDuration - Mathf.Abs(tintTimer)) / tintDuration), s, v);

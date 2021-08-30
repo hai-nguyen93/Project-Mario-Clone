@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public enum GameState { Playing, Paused}
+public enum GameState { Playing, Paused, Finish}
 
 public class GameController : MonoBehaviour
 {
@@ -57,13 +57,16 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         // update timer
-        if (timer < 0)
+        if (gameState == GameState.Playing)
         {
-            if (!gameOverScreen.activeSelf)
-                GameOver();
+            if (timer < 0)
+            {
+                if (!gameOverScreen.activeSelf)
+                    GameOver();
+            }
+            else
+                timer -= Time.deltaTime;
         }
-        else
-            timer -= Time.deltaTime;
         timeText.text = "Time: " + Mathf.RoundToInt(timer);
 
         if (Input.GetKeyDown(KeyCode.Escape) && !isInScreenTransition)
@@ -104,6 +107,7 @@ public class GameController : MonoBehaviour
         isPaused = true;
         Time.timeScale = 0f;
         pauseScreen.SetActive(true);
+        gameState = GameState.Paused;
         StartCoroutine(FadePanel(0.5f, pauseScreen.GetComponent<Image>(), 0f, pauseScreen.GetComponent<Image>().color.a));
     }
 
@@ -112,6 +116,7 @@ public class GameController : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1f;
         pauseScreen.SetActive(false);
+        gameState = GameState.Playing;
     }
 
     public void GameOver()
@@ -128,6 +133,11 @@ public class GameController : MonoBehaviour
         isPaused = false;
         timer = timeLimit;
         StartCoroutine(LoadScene(SceneManager.GetActiveScene().buildIndex));
+    }
+
+    public void SetCurrentPosition(Vector2 pos)
+    {
+        transform.position = pos;
     }
 
     IEnumerator FadePanel(float duration, Image panelToFade, float startAlpha, float finalAlpha)
@@ -154,7 +164,7 @@ public class GameController : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.25f);
         float duration = 0.25f;
         float t = duration;
-        while (t > 0)
+        while (t >= 0)
         {
             loadScreen.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(1f, 0f, (duration - t) / duration);
             t -= Time.unscaledDeltaTime;
@@ -165,6 +175,7 @@ public class GameController : MonoBehaviour
         // resume game
         Time.timeScale = 1f;
         loadScreen.SetActive(false);
+        gameState = GameState.Playing;
     }
 
     IEnumerator LoadScene(int sceneIndex)
@@ -173,11 +184,12 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0f;
         loadScreen.SetActive(true);
         isInScreenTransition = true;
+        gameState = GameState.Paused;
 
         // transition to load screen
         float duration = 0.25f;
         float t = duration;
-        while (t > 0)
+        while (t >= 0)
         {
             loadScreen.GetComponent<CanvasGroup>().alpha = Mathf.Lerp(0.7f, 1f, (duration - t) / duration);
             t -= Time.unscaledDeltaTime;
