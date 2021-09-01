@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5727728121932382319}
   - component: {fileID: 5727728121932382318}
   - component: {fileID: 5727728121932382313}
+  - component: {fileID: 2261763147382999404}
   m_Layer: 6
   m_Name: brick
   m_TagString: Untagged
@@ -126,3 +127,25 @@ MonoBehaviour:
   hitXRelativeOffset: 0.8
   breakPS: {fileID: 198067878942462744, guid: e6916597ed42ccd40b5d4f43d163d532, type: 3}
   budgeDuration: 0.1
+--- !u!68 &2261763147382999404
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5727728121932382317}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.51}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -0.5, y: 0}
+  - {x: 0.5, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0

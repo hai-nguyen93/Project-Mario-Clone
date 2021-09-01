@@ -15,7 +15,7 @@ public class EnemyGoomba : EnemyBase
     // Start is called before the first frame update
     void Start()
     {
-        xVel = -speed;
+        xVel = facingRight ? speed : -speed;
     }
 
 

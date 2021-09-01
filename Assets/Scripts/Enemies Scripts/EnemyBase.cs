@@ -15,7 +15,7 @@ public class EnemyBase : MonoBehaviour
     protected BoxCollider2D bc;
     protected SpriteRenderer sr;
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         sr.material = m_default;
@@ -56,6 +56,21 @@ public class EnemyBase : MonoBehaviour
         bc.enabled = false;
         sr.material = m_dissolve;
         StartCoroutine(BurnToDeath());
+    }
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        var pc = collision.collider.attachedRigidbody?.GetComponent<PlayerController>();
+        if (pc && collision.GetContact(0).normal.y < -0.5f)
+        {            
+            pc.Jump(pc.jumpPower / 2);
+            OnHitHead();
+        }
+    }
+
+    public virtual void OnHitHead() 
+    {
+        Die();
     }
 
     IEnumerator BurnToDeath()

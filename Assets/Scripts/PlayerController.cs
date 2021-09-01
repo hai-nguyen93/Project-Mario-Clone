@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
         }
         if (onGround && jumpTimer > Time.time)
         {
-            Jump();
+            Jump(jumpPower);
         }
 
         // Fire
@@ -155,10 +155,10 @@ public class PlayerController : MonoBehaviour
         return (hitLeft.collider != null) || (hitRight.collider != null);
     }
 
-    public void Jump() // simple jump, will fix later
+    public void Jump( float _jumpPower) // simple jump, will fix later
     {
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        rb.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        rb.AddForce(Vector2.up * _jumpPower, ForceMode2D.Impulse);
     }
     
     public void FireBullet()
@@ -206,6 +206,7 @@ public class PlayerController : MonoBehaviour
         }
 
         sr = currCollider.gameObject.GetComponent<SpriteRenderer>();
+        dust.transform.position = currCollider.bounds.center - new Vector3(0, currCollider.bounds.extents.y, 0);
     }
 
     public void PipeTeleport(Transform dest, bool isDestinationPipe)

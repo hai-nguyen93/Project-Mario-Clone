@@ -8,7 +8,8 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.attachedRigidbody.gameObject.CompareTag("Player"))
+        var hit_rb = other.attachedRigidbody;
+        if (hit_rb && hit_rb.CompareTag("Player"))
         {
             GameController.instance.AddScore(value);
             Destroy(gameObject);

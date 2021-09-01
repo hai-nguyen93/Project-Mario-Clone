@@ -18,7 +18,7 @@ public class Brick : InteractableTile
         if (pc.playerLevel == 1)
         {
             var hit = Physics2D.Raycast(bc.bounds.center, Vector2.up, bc.bounds.extents.y + 0.1f);
-            if (!hit || hit.collider.gameObject.layer != LayerMask.NameToLayer("Platform"))
+            if (!hit || hit.collider.gameObject.layer != LayerMask.NameToLayer("Platform") || hit.transform == transform)
             {
                 if (!isBudging)
                     StartCoroutine(Budge());

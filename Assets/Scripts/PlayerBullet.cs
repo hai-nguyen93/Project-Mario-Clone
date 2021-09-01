@@ -57,11 +57,11 @@ public class PlayerBullet : MonoBehaviour
             }          
         }
 
-        //if (collision.gameObject.CompareTag("Enemy"))
-        //{
-        //    EnemyBase e = collision.collider.transform.root.GetComponent<EnemyBase>();
-        //    e.OnBulletHit();
-        //}
+        /*if (collision.gameObject.CompareTag("Enemy"))
+        {
+            EnemyBase e = collision.collider.transform.root.GetComponent<EnemyBase>();
+            e.OnBulletHit();
+        }*/
                    
         Destroy(gameObject);
     }

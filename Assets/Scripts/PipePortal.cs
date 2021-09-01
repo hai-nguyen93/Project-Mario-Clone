@@ -11,7 +11,7 @@ public class PipePortal : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            var pc = collision.attachedRigidbody.GetComponent<PlayerController>();
+            var pc = collision.attachedRigidbody?.GetComponent<PlayerController>();
             if (Input.GetAxisRaw("Vertical") < -0.5f && pc.onGround)
             {
                 pc.PipeTeleport(destination, isDestinationPipe);

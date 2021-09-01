@@ -18,7 +18,7 @@ public class LevelEndFlag : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        pc = collision.attachedRigidbody.GetComponent<PlayerController>();
+        pc = collision.attachedRigidbody?.GetComponent<PlayerController>();
         if (pc)
         {
             pc_rb = collision.attachedRigidbody;

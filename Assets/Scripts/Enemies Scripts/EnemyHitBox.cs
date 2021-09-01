@@ -5,7 +5,7 @@ public class EnemyHitBox : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var pc = collision.attachedRigidbody.GetComponent<PlayerController>();
+        var pc = collision.attachedRigidbody?.GetComponent<PlayerController>();
         if (pc)
         {
             if (pc.godMode)

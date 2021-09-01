@@ -13,7 +13,7 @@ public class MovingPlatform : MonoBehaviour
     private int currIndex = 0;
     private Vector2 destination;
     private Rigidbody2D rb;
-    private PlayerController attachedPlayer;
+    public List<Rigidbody2D> attachedRbs;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +36,7 @@ public class MovingPlatform : MonoBehaviour
         currIndex = 0;
         rb = GetComponent<Rigidbody2D>();
         destination = points[0];
+        attachedRbs = new List<Rigidbody2D>();
     }
 
     private void Update()
@@ -63,7 +64,7 @@ public class MovingPlatform : MonoBehaviour
                         break;
 
                     case MovingPattern.reset:
-                        DetachPlayer();
+                        DetachAllRigidbodies();
                         transform.position = points[0];
                         destination = points[++currIndex];
                         break;
@@ -76,28 +77,36 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var hit = collision.collider.attachedRigidbody.GetComponent<PlayerController>();
-        if (hit && hit.onGround)
+        var hitRB = collision.collider.attachedRigidbody;
+        if (hitRB && collision.GetContact(0).normal.y < -0.5f)
         {
-            attachedPlayer = hit;
-            attachedPlayer.transform.SetParent(transform);
+            attachedRbs.Add(hitRB);
+            hitRB.transform.root.SetParent(transform);
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.collider.attachedRigidbody.CompareTag("Player"))
+        var hitRB = collision.collider.attachedRigidbody;
+        if (hitRB)
         {
-            DetachPlayer();
+            DetachRigidbody(hitRB);
         }
     }
 
-    public void DetachPlayer()
+    public void DetachRigidbody(Rigidbody2D rb)
     {
-        if (attachedPlayer)
+        rb.transform.SetParent(null);
+        attachedRbs.Remove(rb);
+    }
+
+    public void DetachAllRigidbodies()
+    {
+        foreach (Rigidbody2D r in attachedRbs)
         {
-            attachedPlayer.transform.SetParent(null);
-            attachedPlayer = null;
+            r.transform.SetParent(null);
         }
+
+        attachedRbs.Clear();
     }
 }
