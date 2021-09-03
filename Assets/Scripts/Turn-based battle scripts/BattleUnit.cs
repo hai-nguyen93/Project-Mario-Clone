@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum UnitState { Acting, Waiting, Selecting}
+
 public class BattleUnit : MonoBehaviour
 {
     public string unitName;
@@ -10,7 +13,7 @@ public class BattleUnit : MonoBehaviour
     public int maxHP;
     public int currHP;
     public bool isDead;
-    public bool isTurn;
+    public UnitState state;
 
     public BattleHandler bh;
     public BattleHUD bhud;
@@ -21,8 +24,36 @@ public class BattleUnit : MonoBehaviour
     private void Start()
     {
         isDead = false;
-        isTurn = false;
+        state = UnitState.Waiting;
         originalPos = transform.position;
+    }
+
+    private void Update()
+    {
+        switch (state)
+        {
+            case UnitState.Selecting:
+                if (Input.GetKeyDown(KeyCode.J)) // attack
+                {
+                    // select target then attack
+                    Attack(bh.enemies[0]);
+                    state = UnitState.Acting;
+                    bhud.CloseCommandMenu();
+                }
+                if (Input.GetKeyDown(KeyCode.K)) // skip turn
+                {
+                    bhud.CloseCommandMenu();
+                    bhud.SetLog("Skipped Turn!");
+                    StartCoroutine(TurnEnd());
+                }
+                break;
+
+            case UnitState.Waiting:
+                break;
+
+            case UnitState.Acting:
+                break;
+        }
     }
 
     public Vector2 GetPosition()
@@ -57,13 +88,18 @@ public class BattleUnit : MonoBehaviour
 
     IEnumerator PlayTurn()
     {
-        yield return Move(originalPos + forward * 2f, 0.5f);
-        Attack(bh.enemies[0]);
+        // move forward
+        yield return Move(originalPos + forward * 1f, 0.25f);
+        state = UnitState.Selecting;
+        bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
+        bhud.SetLog("Choose an action!");
     }
 
     IEnumerator TurnEnd()
     {
-        yield return Move(originalPos, 0.5f);
+        // move back
+        yield return Move(originalPos, 0.25f);
+        state = UnitState.Waiting;
         bh.NextTurn();
     }
 
@@ -82,9 +118,12 @@ public class BattleUnit : MonoBehaviour
 
     IEnumerator UnitAttack(BattleUnit target)
     {
+        // move to target
         Vector2 moveVector = (target.GetPosition() - (Vector2)transform.position);
         Vector2 movePos = (Vector2)transform.position + moveVector * 0.9f;
         yield return Move(movePos, 0.5f);
+
+        // attack
         target.Damage(atk);
         string log = $"{unitName} hit {target.unitName} for {atk} damage.";
         bhud.SetLog(log);

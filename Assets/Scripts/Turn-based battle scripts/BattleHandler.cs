@@ -37,7 +37,6 @@ public class BattleHandler : MonoBehaviour
             currentUnitTurn = (currentUnitTurn + 1) % battlers.Count;
             if (!battlers[currentUnitTurn].isDead)
             {
-                battlers[currentUnitTurn].isTurn = true;
                 if (players.Contains(battlers[currentUnitTurn])) // player's unit's turn
                 {
                     battlers[currentUnitTurn].TurnStart();
