@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum UnitState { Acting, Waiting, Selecting}
+public enum UnitState { Acting, Waiting, Selecting, ChoosingTarget}
+public enum CommandType { Attack, Skill}
 
 public class BattleUnit : MonoBehaviour
 {
@@ -17,15 +18,21 @@ public class BattleUnit : MonoBehaviour
 
     public BattleHandler bh;
     public BattleHUD bhud;
+    public GameObject indicator;
 
     private Vector2 forward = Vector2.left;
     private Vector2 originalPos;
 
+    private CommandType chosenCommand;
+    public int currTargetIndex = 0;
+
     private void Start()
     {
+        indicator.SetActive(false);
         isDead = false;
         state = UnitState.Waiting;
         originalPos = transform.position;
+        currHP = maxHP;
     }
 
     private void Update()
@@ -36,9 +43,11 @@ public class BattleUnit : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.J)) // attack
                 {
                     // select target then attack
-                    Attack(bh.enemies[0]);
-                    state = UnitState.Acting;
+                    state = UnitState.ChoosingTarget;
+                    chosenCommand = CommandType.Attack;
+                    SetDefaultTarget();
                     bhud.CloseCommandMenu();
+                    bhud.SetLog("Choose a target!");
                 }
                 if (Input.GetKeyDown(KeyCode.K)) // skip turn
                 {
@@ -46,6 +55,10 @@ public class BattleUnit : MonoBehaviour
                     bhud.SetLog("Skipped Turn!");
                     StartCoroutine(TurnEnd());
                 }
+                break;
+
+            case UnitState.ChoosingTarget:
+                ChoosingTarget();
                 break;
 
             case UnitState.Waiting:
@@ -61,8 +74,70 @@ public class BattleUnit : MonoBehaviour
         return (Vector2)transform.position;
     }
 
+    private void ChoosingTarget()
+    {
+        // return to selecting command if cancel
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            bh.TurnOffAllIndicators();
+            state = UnitState.Selecting;
+            bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
+            bhud.SetLog("Choose an action!");
+            return;
+        }
+
+        // switching target
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            bh.TurnOffAllIndicators();
+            do
+            {
+                if (currTargetIndex == 0) currTargetIndex = bh.enemies.Count;
+                currTargetIndex = (currTargetIndex - 1) % bh.enemies.Count;
+            } while (bh.enemies[currTargetIndex].isDead);
+        }
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            bh.TurnOffAllIndicators();
+            do
+            {
+                currTargetIndex = (currTargetIndex + 1) % bh.enemies.Count;
+            } while (bh.enemies[currTargetIndex].isDead);
+        }
+
+        // indicator on target
+        if (!bh.enemies[currTargetIndex].indicator.activeSelf)
+        {
+            bh.enemies[currTargetIndex].indicator.SetActive(true);
+        }
+
+        switch (chosenCommand)
+        {
+            case CommandType.Attack:
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    bh.TurnOffAllIndicators();
+                    Attack(bh.enemies[currTargetIndex]);
+                }
+                break;
+
+            case CommandType.Skill:
+                break;
+        }      
+    }
+
+    private void SetDefaultTarget()
+    {
+        currTargetIndex = 0;
+        while (bh.enemies[currTargetIndex].isDead)
+        {
+            currTargetIndex = (currTargetIndex + 1) % bh.enemies.Count;
+        }
+    }
+
     public void Attack(BattleUnit target)
     {
+        state = UnitState.Acting;
         StartCoroutine(UnitAttack(target));
     }
 

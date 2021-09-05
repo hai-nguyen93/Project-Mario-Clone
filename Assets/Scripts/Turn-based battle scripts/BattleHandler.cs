@@ -81,6 +81,14 @@ public class BattleHandler : MonoBehaviour
         return true;
     }
 
+    public void TurnOffAllIndicators()
+    {
+        foreach (BattleUnit b in battlers)
+        {
+            b.indicator.SetActive(false);
+        }
+    }
+
     IEnumerator SetupBattle()
     {
         battlers = new List<BattleUnit>(players.Count + enemies.Count);
