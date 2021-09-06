@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum UnitState { Acting, Waiting, Selecting, ChoosingTarget}
+public enum UnitState { Acting, Waiting, ChoosingAction, ChoosingTarget, ChoosingSkill}
 public enum CommandType { Attack, Skill}
 
 public class BattleUnit : MonoBehaviour
@@ -14,6 +14,7 @@ public class BattleUnit : MonoBehaviour
     public int maxHP;
     public int currHP;
     public bool isDead;
+    public List<AbilityBase> skills;
     public UnitState state;
 
     public BattleHandler bh;
@@ -24,6 +25,7 @@ public class BattleUnit : MonoBehaviour
     private Vector2 originalPos;
 
     private CommandType chosenCommand;
+    public int currSkillIndex = 0;
     public int currTargetIndex = 0;
 
     private void Start()
@@ -39,18 +41,27 @@ public class BattleUnit : MonoBehaviour
     {
         switch (state)
         {
-            case UnitState.Selecting:
+            case UnitState.ChoosingAction:
                 if (Input.GetKeyDown(KeyCode.J)) // attack
                 {
                     // select target then attack
-                    state = UnitState.ChoosingTarget;
+                    ChangeState(UnitState.ChoosingTarget);
                     chosenCommand = CommandType.Attack;
                     SetDefaultTarget();
                     bhud.CloseCommandMenu();
                     bhud.SetLog("Choose a target!");
                 }
+
+                if (Input.GetKeyDown(KeyCode.I)) // skill
+                {
+                    // open skill menu
+                    // select skill
+                    // select target
+                }
+
                 if (Input.GetKeyDown(KeyCode.K)) // skip turn
                 {
+                    ChangeState(UnitState.Waiting);
                     bhud.CloseCommandMenu();
                     bhud.SetLog("Skipped Turn!");
                     StartCoroutine(TurnEnd());
@@ -79,8 +90,8 @@ public class BattleUnit : MonoBehaviour
         // return to selecting command if cancel
         if (Input.GetKeyDown(KeyCode.K))
         {
-            bh.TurnOffAllIndicators();
-            state = UnitState.Selecting;
+            ChangeState(UnitState.ChoosingAction);
+
             bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
             bhud.SetLog("Choose an action!");
             return;
@@ -137,7 +148,7 @@ public class BattleUnit : MonoBehaviour
 
     public void Attack(BattleUnit target)
     {
-        state = UnitState.Acting;
+        ChangeState(UnitState.Acting);
         StartCoroutine(UnitAttack(target));
     }
 
@@ -161,11 +172,17 @@ public class BattleUnit : MonoBehaviour
         }
     }
 
+    public void ChangeState(UnitState newState)
+    {
+        state = newState;
+        bh.TurnOffAllIndicators();
+    }
+
     IEnumerator PlayTurn()
     {
         // move forward
         yield return Move(originalPos + forward * 1f, 0.25f);
-        state = UnitState.Selecting;
+        ChangeState(UnitState.ChoosingAction);
         bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
         bhud.SetLog("Choose an action!");
     }
@@ -174,7 +191,6 @@ public class BattleUnit : MonoBehaviour
     {
         // move back
         yield return Move(originalPos, 0.25f);
-        state = UnitState.Waiting;
         bh.NextTurn();
     }
 
@@ -203,6 +219,7 @@ public class BattleUnit : MonoBehaviour
         string log = $"{unitName} hit {target.unitName} for {atk} damage.";
         bhud.SetLog(log);
         yield return new WaitForSeconds(0.5f);
+        ChangeState(UnitState.Waiting);
         yield return TurnEnd();
     }
 }

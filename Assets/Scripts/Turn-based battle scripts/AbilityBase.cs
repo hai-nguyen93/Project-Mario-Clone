@@ -7,4 +7,6 @@ public class AbilityBase : ScriptableObject
 {
     public new string name;
     public string description;
+
+    public int power;
 }
