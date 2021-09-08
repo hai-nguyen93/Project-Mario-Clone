@@ -14,6 +14,7 @@ public class BattleHUD : MonoBehaviour
     void Start()
     {
         commandMenu.SetActive(false);
+        skillMenu.SetActive(false);
         battleLog.text = "Battle begins!";
     }
 
@@ -45,10 +46,17 @@ public class BattleHUD : MonoBehaviour
         skillPanel.SetupSkills(owner);
 
         skillMenu.SetActive(true);
+        skillPanel.gameObject.SetActive(true);
     }
 
     public void CloseSkillMenu()
     {
         skillMenu.SetActive(false);
+    }
+
+    public void TurnOffAllMenus()
+    {
+        skillMenu.SetActive(false);
+        commandMenu.SetActive(false);
     }
 }

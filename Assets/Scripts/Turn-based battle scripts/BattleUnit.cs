@@ -46,15 +46,15 @@ public class BattleUnit : MonoBehaviour
                 {
                     // select target then attack
                     ChangeState(UnitState.ChoosingTarget);
-                    chosenCommand = CommandType.Attack;
-                    SetDefaultTarget();
-                    bhud.CloseCommandMenu();
+                    chosenCommand = CommandType.Attack;                 
                     bhud.SetLog("Choose a target!");
                 }
 
                 if (Input.GetKeyDown(KeyCode.I)) // skill
                 {
                     // open skill menu
+                    chosenCommand = CommandType.Skill;
+                    ChangeState(UnitState.ChoosingSkill);
                     // select skill
                     // select target
                 }
@@ -62,7 +62,6 @@ public class BattleUnit : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.K)) // skip turn
                 {
                     ChangeState(UnitState.Waiting);
-                    bhud.CloseCommandMenu();
                     bhud.SetLog("Skipped Turn!");
                     StartCoroutine(TurnEnd());
                 }
@@ -70,6 +69,9 @@ public class BattleUnit : MonoBehaviour
 
             case UnitState.ChoosingTarget:
                 ChoosingTarget();
+                break;
+
+            case UnitState.ChoosingSkill: // let SkillPanelUI handle this
                 break;
 
             case UnitState.Waiting:
@@ -91,8 +93,6 @@ public class BattleUnit : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.K))
         {
             ChangeState(UnitState.ChoosingAction);
-
-            bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
             bhud.SetLog("Choose an action!");
             return;
         }
@@ -133,8 +133,22 @@ public class BattleUnit : MonoBehaviour
                 break;
 
             case CommandType.Skill:
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    bh.TurnOffAllIndicators();
+                    StartCoroutine(UseSkill(bh.enemies[currTargetIndex]));
+                }
                 break;
         }      
+    }
+
+    IEnumerator UseSkill(BattleUnit target)
+    {
+        ChangeState(UnitState.Acting);
+        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name}.");
+        yield return new WaitForSeconds(1f);
+        ChangeState(UnitState.Waiting);
+        yield return TurnEnd();
     }
 
     private void SetDefaultTarget()
@@ -175,7 +189,23 @@ public class BattleUnit : MonoBehaviour
     public void ChangeState(UnitState newState)
     {
         state = newState;
+        bhud.TurnOffAllMenus();
         bh.TurnOffAllIndicators();
+
+        switch (state)
+        {
+            case UnitState.ChoosingAction:
+                bhud.OpenCommandMenu((Vector2)transform.position + new Vector2(-2f, 0));
+                break;
+
+            case UnitState.ChoosingSkill:
+                bhud.OpenSkillMenu(this);
+                break;
+
+            case UnitState.ChoosingTarget:
+                SetDefaultTarget();
+                break;
+        }
     }
 
     IEnumerator PlayTurn()

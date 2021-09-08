@@ -619,7 +619,6 @@ GameObject:
   m_Component:
   - component: {fileID: 280721848}
   - component: {fileID: 280721850}
-  - component: {fileID: 280721851}
   - component: {fileID: 280721849}
   m_Layer: 0
   m_Name: Panel
@@ -666,7 +665,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillItemPrefab: {fileID: 5848526922622148044, guid: fd89861ec00fd61449d169e72d06631a, type: 3}
-  testing: {fileID: 265637363}
+  scrollArea: {fileID: 2038675707}
+  owner: {fileID: 265637363}
+  menuItems: []
 --- !u!114 &280721850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,36 +694,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &280721851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 280721847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Content: {fileID: 280721848}
-  m_Horizontal: 0
-  m_Vertical: 1
-  m_MovementType: 2
-  m_Elasticity: 0.1
-  m_Inertia: 0
-  m_DecelerationRate: 0.135
-  m_ScrollSensitivity: 20
-  m_Viewport: {fileID: 2038675707}
-  m_HorizontalScrollbar: {fileID: 0}
-  m_VerticalScrollbar: {fileID: 0}
-  m_HorizontalScrollbarVisibility: 0
-  m_VerticalScrollbarVisibility: 0
-  m_HorizontalScrollbarSpacing: 0
-  m_VerticalScrollbarSpacing: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &323714404
 GameObject:
   m_ObjectHideFlags: 0
@@ -2233,7 +2204,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1281593946
 Transform:
   m_ObjectHideFlags: 0
@@ -2723,7 +2694,9 @@ MonoBehaviour:
   maxHP: 15
   currHP: 15
   isDead: 0
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: 8348068fc25878840a9a827241d5b0e0, type: 2}
+  - {fileID: 11400000, guid: f6d70dd4557fa804dac7149ce25181b5, type: 2}
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
@@ -3521,7 +3494,8 @@ MonoBehaviour:
   maxHP: 15
   currHP: 15
   isDead: 0
-  skills: []
+  skills:
+  - {fileID: 11400000, guid: 4d221766c0f53744985a83c678dbd8be, type: 2}
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
