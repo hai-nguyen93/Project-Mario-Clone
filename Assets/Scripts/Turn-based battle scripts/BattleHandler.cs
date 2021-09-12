@@ -14,6 +14,7 @@ public class BattleHandler : MonoBehaviour
     public List<BattleUnit> battlers;
 
     public int currentUnitTurn = 0;
+    public List<ParticleSystem> particleEffects;
 
     private void Start()
     {
@@ -79,6 +80,27 @@ public class BattleHandler : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void PlayParticleEffect(string particleName, Vector2 position)
+    {
+        int i = GetParticleIndex(particleName);
+        if (i == -1) // error; play default particle, assume i=0 is the default 
+        {
+            i = 0;
+        }
+        Instantiate(particleEffects[i], position, Quaternion.identity);
+    }
+
+    public int GetParticleIndex(string particleName)
+    {
+        int i = 0;
+        for (i = 0; i < particleEffects.Count; ++i)
+        {
+            if (particleEffects[i].name == particleName)
+                return i;
+        }
+        return -1;
     }
 
     public void TurnOffAllIndicators()

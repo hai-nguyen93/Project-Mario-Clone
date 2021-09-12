@@ -2243,6 +2243,8 @@ MonoBehaviour:
   - {fileID: 1280214430}
   battlers: []
   currentUnitTurn: 0
+  particleEffects:
+  - {fileID: 7478443541595825611, guid: 7502e8ac7b3e9584f91bebf148aeb253, type: 3}
 --- !u!1 &1644518396
 GameObject:
   m_ObjectHideFlags: 0

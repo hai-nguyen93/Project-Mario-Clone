@@ -14,7 +14,7 @@ public class BattleUnit : MonoBehaviour
     public int maxHP;
     public int currHP;
     public bool isDead;
-    public List<AbilityBase> skills;
+    public List<SkillBase> skills;
     public UnitState state;
 
     public BattleHandler bh;
@@ -141,16 +141,7 @@ public class BattleUnit : MonoBehaviour
                 break;
         }      
     }
-
-    IEnumerator UseSkill(BattleUnit target)
-    {
-        ChangeState(UnitState.Acting);
-        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name}.");
-        yield return new WaitForSeconds(1f);
-        ChangeState(UnitState.Waiting);
-        yield return TurnEnd();
-    }
-
+    
     private void SetDefaultTarget()
     {
         currTargetIndex = 0;
@@ -245,10 +236,22 @@ public class BattleUnit : MonoBehaviour
         yield return Move(movePos, 0.5f);
 
         // attack
-        target.Damage(atk);
         string log = $"{unitName} hit {target.unitName} for {atk} damage.";
         bhud.SetLog(log);
+        bh.PlayParticleEffect("AttackParticle", target.GetPosition());
         yield return new WaitForSeconds(0.5f);
+        target.Damage(atk);
+        ChangeState(UnitState.Waiting);
+        yield return TurnEnd();
+    }
+
+    IEnumerator UseSkill(BattleUnit target)
+    {
+        ChangeState(UnitState.Acting);
+        yield return skills[currSkillIndex].ActivateSkill(target);
+        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name} for {skills[currSkillIndex].power} damage.");
+        target.Damage(skills[currSkillIndex].power);
+        yield return new WaitForSeconds(0.25f);
         ChangeState(UnitState.Waiting);
         yield return TurnEnd();
     }
