@@ -8,6 +8,7 @@ public class SkillBase : ScriptableObject
     public new string name;
     public string description;
     public ParticleSystem particlePrefab;
+    public bool qte;
 
     public int power;
 

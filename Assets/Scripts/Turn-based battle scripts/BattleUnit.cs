@@ -19,6 +19,7 @@ public class BattleUnit : MonoBehaviour
 
     public BattleHandler bh;
     public BattleHUD bhud;
+    public QTESys qteSys;
     public GameObject indicator;
 
     private Vector2 forward = Vector2.left;
@@ -248,9 +249,25 @@ public class BattleUnit : MonoBehaviour
     IEnumerator UseSkill(BattleUnit target)
     {
         ChangeState(UnitState.Acting);
+
+        float dmg = skills[currSkillIndex].power;
+        if (skills[currSkillIndex].qte)
+        {
+            yield return qteSys.PlayQTE();
+            if (qteSys.state != QTEState.Success)
+            {
+                bhud.SetLog("Fail QTE!!!");
+                dmg = dmg / 2f;
+            }
+            else
+                bhud.SetLog("Success QTE!!");
+
+            yield return new WaitForSeconds(0.5f);
+        }
+
         yield return skills[currSkillIndex].ActivateSkill(target);
-        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name} for {skills[currSkillIndex].power} damage.");
-        target.Damage(skills[currSkillIndex].power);
+        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name} for {(int) dmg} damage.");
+        target.Damage((int) dmg);
         yield return new WaitForSeconds(0.25f);
         ChangeState(UnitState.Waiting);
         yield return TurnEnd();

@@ -366,7 +366,7 @@ Transform:
   m_Children:
   - {fileID: 1905232320}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &71556149
 MonoBehaviour:
@@ -415,7 +415,7 @@ Transform:
   m_Children:
   - {fileID: 752281064}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &165029907
 SpriteRenderer:
@@ -491,6 +491,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 752281062}
   currSkillIndex: 0
   currTargetIndex: 0
@@ -525,7 +526,7 @@ Transform:
   m_Children:
   - {fileID: 1201499383}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &265637362
 SpriteRenderer:
@@ -606,6 +607,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 1201499381}
   currSkillIndex: 0
   currTargetIndex: 0
@@ -1158,6 +1160,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 462264132}
+  m_CullTransparentMesh: 1
+--- !u!1 &588010879
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 588010880}
+  - component: {fileID: 588010882}
+  - component: {fileID: 588010881}
+  m_Layer: 0
+  m_Name: QTE Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &588010880
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588010879}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1905232320}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -199}
+  m_SizeDelta: {x: 160, y: 30}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &588010881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588010879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 30
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 3
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: New Text
+--- !u!222 &588010882
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588010879}
   m_CullTransparentMesh: 1
 --- !u!1 &752281062
 GameObject:
@@ -2109,7 +2190,7 @@ Transform:
   m_Children:
   - {fileID: 1803938593}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1280214430
 MonoBehaviour:
@@ -2133,6 +2214,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 1803938592}
   currSkillIndex: 0
   currTargetIndex: 0
@@ -2624,7 +2706,7 @@ Transform:
   m_Children:
   - {fileID: 2035530372}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1777874758
 SpriteRenderer:
@@ -2702,6 +2784,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 2035530370}
   currSkillIndex: 0
   currTargetIndex: 0
@@ -2899,6 +2982,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1281593946}
+  - {fileID: 2015933781}
   - {fileID: 71556148}
   - {fileID: 265637361}
   - {fileID: 2022530534}
@@ -2942,6 +3026,7 @@ RectTransform:
   - {fileID: 944801631}
   - {fileID: 323714405}
   - {fileID: 995546903}
+  - {fileID: 588010880}
   m_Father: {fileID: 71556148}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3283,6 +3368,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979517998}
   m_CullTransparentMesh: 1
+--- !u!1 &2015933780
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2015933781}
+  - component: {fileID: 2015933782}
+  m_Layer: 0
+  m_Name: QTESystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2015933781
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015933780}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1814582575}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2015933782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015933780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114c89c1dc73fbc40ac6aaad539c19dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeLimit: 3
+  timerText: {fileID: 588010881}
+  keyToPress: 106
+  active: 0
+  state: 3
 --- !u!1 &2019955491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3314,7 +3447,7 @@ Transform:
   m_Children:
   - {fileID: 960412112}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2019955493
 MonoBehaviour:
@@ -3338,6 +3471,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 960412111}
   currSkillIndex: 0
   currTargetIndex: 0
@@ -3424,7 +3558,7 @@ Transform:
   m_Children:
   - {fileID: 1790004034}
   m_Father: {fileID: 1814582575}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2022530535
 SpriteRenderer:
@@ -3501,6 +3635,7 @@ MonoBehaviour:
   state: 0
   bh: {fileID: 1281593947}
   bhud: {fileID: 71556149}
+  qteSys: {fileID: 2015933782}
   indicator: {fileID: 1790004032}
   currSkillIndex: 0
   currTargetIndex: 0

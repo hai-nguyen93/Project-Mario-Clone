@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Punch 4
   description: Ui da!!
-  power: 0
+  particlePrefab: {fileID: 7478443541595825611, guid: 7502e8ac7b3e9584f91bebf148aeb253, type: 3}
+  qte: 1
+  power: 10
