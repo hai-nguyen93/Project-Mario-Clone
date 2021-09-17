@@ -9,7 +9,7 @@ public class QTESys : MonoBehaviour
     public float timeLimit = 3f;
     public float timer;
     public Text timerText;
-    public KeyCode keyToPress = KeyCode.J;
+    public Text comboText;
     public bool active = false;
     public QTEState state = QTEState.Processing;
 
@@ -17,6 +17,7 @@ public class QTESys : MonoBehaviour
     {
         active = false;
         timerText.enabled = false;
+        comboText.enabled = false;
         state = QTEState.Processing;
     }
 
@@ -29,7 +30,7 @@ public class QTESys : MonoBehaviour
         active = true;
     }
 
-    public IEnumerator PlayQTE()
+    public IEnumerator PlayQTE(KeyCode keyToPress)
     {
         SetupQTE();
 
@@ -46,8 +47,7 @@ public class QTESys : MonoBehaviour
                 {
                     state = QTEState.Fail;
                 }
-                active = false;
-                timerText.enabled = false;
+                TurnOffUI();
                 yield break;
             }
 
@@ -58,7 +58,58 @@ public class QTESys : MonoBehaviour
 
         timer = 0;
         state = QTEState.Fail;
+        TurnOffUI();
+    }
+
+    public IEnumerator PlayQTECombo(List<KeyCode> keys)
+    {
+        SetupQTE();
+        int i = 0;
+        comboText.text = "";
+        foreach (KeyCode key in keys)
+        {
+            comboText.text += (key.ToString() + " ");
+        }
+        comboText.enabled = true;
+
+        yield return new WaitForSeconds(0.05f);
+        while (timer > 0)
+        {
+            if (Input.anyKeyDown)
+            {
+                if (Input.GetKeyDown(keys[i]))
+                {
+                    ++i;
+                    if (i >= keys.Count)
+                    {
+                        state = QTEState.Success;
+                        TurnOffUI();
+                        yield break;
+                    }
+                }
+                else
+                {
+                    state = QTEState.Fail;
+                    TurnOffUI();
+                    yield break;
+                }
+            }
+
+            timerText.text = timer + "s";
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        timer = 0;
+        state = QTEState.Fail;
+        TurnOffUI();
+    }
+
+    public void TurnOffUI()
+    {
         active = false;
         timerText.enabled = false;
+        comboText.enabled = false;
     }
 }
+

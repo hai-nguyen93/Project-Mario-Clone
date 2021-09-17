@@ -253,7 +253,20 @@ public class BattleUnit : MonoBehaviour
         float dmg = skills[currSkillIndex].power;
         if (skills[currSkillIndex].qte)
         {
-            yield return qteSys.PlayQTE();
+            yield return qteSys.PlayQTE(skills[currSkillIndex].qteKey);
+            if (qteSys.state != QTEState.Success)
+            {
+                bhud.SetLog("Fail QTE!!!");
+                dmg = dmg / 2f;
+            }
+            else
+                bhud.SetLog("Success QTE!!");
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        else if (skills[currSkillIndex].qteCombo)
+        {
+            yield return qteSys.PlayQTECombo(skills[currSkillIndex].qteKeys);
             if (qteSys.state != QTEState.Success)
             {
                 bhud.SetLog("Fail QTE!!!");
