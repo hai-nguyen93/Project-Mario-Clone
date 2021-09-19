@@ -8,7 +8,9 @@ public class BattleHUD : MonoBehaviour
     public TextMeshProUGUI battleLog;
     public GameObject commandMenu;
     public GameObject skillMenu;
+    public GameObject itemMenu;
     public SkillPanelUI skillPanel;
+    public ItemPanelUI itemPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -54,9 +56,24 @@ public class BattleHUD : MonoBehaviour
         skillMenu.SetActive(false);
     }
 
+    public void OpenItemMenu(BattleUnit owner)
+    {
+        // set up skill menu
+        itemPanel.SetupItems(owner);
+
+        itemMenu.SetActive(true);
+        itemPanel.gameObject.SetActive(true);
+    }
+
+    public void CloseItemMenu()
+    {
+        itemMenu.SetActive(false);
+    }
+
     public void TurnOffAllMenus()
     {
         skillMenu.SetActive(false);
+        itemMenu.SetActive(false);
         commandMenu.SetActive(false);
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum UnitState { Acting, Waiting, ChoosingAction, ChoosingTarget, ChoosingSkill}
-public enum CommandType { Attack, Skill}
+public enum UnitState { Acting, Waiting, ChoosingAction, ChoosingTarget, ChoosingSkill, ChoosingItem}
+public enum CommandType { Attack, Skill, Item}
 
 public class BattleUnit : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class BattleUnit : MonoBehaviour
     public int currHP;
     public bool isDead;
     public List<SkillBase> skills;
+    public PlayerParty party; // for ally unit
     public UnitState state;
 
     public BattleHandler bh;
@@ -28,6 +29,7 @@ public class BattleUnit : MonoBehaviour
     private CommandType chosenCommand;
     public int currSkillIndex = 0;
     public int currTargetIndex = 0;
+    private List<BattleUnit> currTargetParty;
 
     private void Start()
     {
@@ -36,6 +38,7 @@ public class BattleUnit : MonoBehaviour
         state = UnitState.Waiting;
         originalPos = transform.position;
         currHP = maxHP;
+        currTargetParty = bh.enemies;
     }
 
     private void Update()
@@ -53,11 +56,14 @@ public class BattleUnit : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.I)) // skill
                 {
-                    // open skill menu
                     chosenCommand = CommandType.Skill;
                     ChangeState(UnitState.ChoosingSkill);
-                    // select skill
-                    // select target
+                }
+
+                if (Input.GetKeyDown(KeyCode.L)) // item
+                {
+                    chosenCommand = CommandType.Item;
+                    ChangeState(UnitState.ChoosingItem);
                 }
 
                 if (Input.GetKeyDown(KeyCode.K)) // skip turn
@@ -104,23 +110,33 @@ public class BattleUnit : MonoBehaviour
             bh.TurnOffAllIndicators();
             do
             {
-                if (currTargetIndex == 0) currTargetIndex = bh.enemies.Count;
-                currTargetIndex = (currTargetIndex - 1) % bh.enemies.Count;
-            } while (bh.enemies[currTargetIndex].isDead);
+                if (currTargetIndex == 0) currTargetIndex = currTargetParty.Count;
+                currTargetIndex = (currTargetIndex - 1) % currTargetParty.Count;
+            } while (currTargetParty[currTargetIndex].isDead);
         }
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             bh.TurnOffAllIndicators();
             do
             {
-                currTargetIndex = (currTargetIndex + 1) % bh.enemies.Count;
-            } while (bh.enemies[currTargetIndex].isDead);
+                currTargetIndex = (currTargetIndex + 1) % currTargetParty.Count;
+            } while (currTargetParty[currTargetIndex].isDead);
+        }
+        if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) // switch to target player party
+        {
+            bh.TurnOffAllIndicators();
+            SetDefaultTarget(bh.players);
+        }
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))// switch to target enemy party
+        {
+            bh.TurnOffAllIndicators();
+            SetDefaultTarget(bh.enemies);
         }
 
         // indicator on target
-        if (!bh.enemies[currTargetIndex].indicator.activeSelf)
+        if (!currTargetParty[currTargetIndex].indicator.activeSelf)
         {
-            bh.enemies[currTargetIndex].indicator.SetActive(true);
+            currTargetParty[currTargetIndex].indicator.SetActive(true);
         }
 
         switch (chosenCommand)
@@ -129,7 +145,7 @@ public class BattleUnit : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.J))
                 {
                     bh.TurnOffAllIndicators();
-                    Attack(bh.enemies[currTargetIndex]);
+                    Attack(currTargetParty[currTargetIndex]);
                 }
                 break;
 
@@ -137,18 +153,27 @@ public class BattleUnit : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.J))
                 {
                     bh.TurnOffAllIndicators();
-                    StartCoroutine(UseSkill(bh.enemies[currTargetIndex]));
+                    StartCoroutine(UseSkill(currTargetParty[currTargetIndex]));
+                }
+                break;
+
+            case CommandType.Item:
+                if (Input.GetKeyDown(KeyCode.J))
+                {
+                    bh.TurnOffAllIndicators();
+                    StartCoroutine(UseItem(currTargetParty[currTargetIndex]));
                 }
                 break;
         }      
     }
     
-    private void SetDefaultTarget()
+    private void SetDefaultTarget(List<BattleUnit> party)
     {
+        currTargetParty = party;
         currTargetIndex = 0;
-        while (bh.enemies[currTargetIndex].isDead)
+        while (party[currTargetIndex].isDead)
         {
-            currTargetIndex = (currTargetIndex + 1) % bh.enemies.Count;
+            currTargetIndex = (currTargetIndex + 1) % party.Count;
         }
     }
 
@@ -194,8 +219,12 @@ public class BattleUnit : MonoBehaviour
                 bhud.OpenSkillMenu(this);
                 break;
 
+            case UnitState.ChoosingItem:
+                bhud.OpenItemMenu(this);
+                break;
+
             case UnitState.ChoosingTarget:
-                SetDefaultTarget();
+                SetDefaultTarget(bh.enemies);
                 break;
         }
     }
@@ -282,6 +311,18 @@ public class BattleUnit : MonoBehaviour
         bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name} for {(int) dmg} damage.");
         target.Damage((int) dmg);
         yield return new WaitForSeconds(0.25f);
+        ChangeState(UnitState.Waiting);
+        yield return TurnEnd();
+    }
+
+    IEnumerator UseItem(BattleUnit target)
+    {
+        ChangeState(UnitState.Acting);
+
+        yield return party.inventory[currSkillIndex].itemBase.ActivateItem(target);
+        bhud.SetLog($"{name} used {party.inventory[currSkillIndex].itemBase.name} on {target.name}, healed {(int)party.inventory[currSkillIndex].itemBase.power}hp.");
+        party.inventory[currSkillIndex].quantity--;
+        yield return new WaitForSeconds(0.35f);
         ChangeState(UnitState.Waiting);
         yield return TurnEnd();
     }
