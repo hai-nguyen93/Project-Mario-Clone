@@ -17,7 +17,7 @@ public class ItemBase : ScriptableObject
         switch (type)
         {
             case ItemType.Heal:
-                target.currHP = Mathf.Clamp(target.currHP + power, 0, target.maxHP);
+                target.Heal(power);
                 break;
 
             case ItemType.Attack:

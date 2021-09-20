@@ -21,6 +21,7 @@ public class BattleUnit : MonoBehaviour
     public BattleHandler bh;
     public BattleHUD bhud;
     public QTESys qteSys;
+    public ProgressBar hpBar;
     public GameObject indicator;
 
     private Vector2 forward = Vector2.left;
@@ -39,6 +40,7 @@ public class BattleUnit : MonoBehaviour
         originalPos = transform.position;
         currHP = maxHP;
         currTargetParty = bh.enemies;
+        hpBar.SetupBar(maxHP, currHP);
     }
 
     private void Update()
@@ -196,11 +198,19 @@ public class BattleUnit : MonoBehaviour
     public void Damage(int value)
     {
         currHP = Mathf.Clamp(currHP - value, 0, 9999);
+        hpBar.UpdateBar(currHP);
         if (currHP <= 0)
         {
+            currHP = 0;
             isDead = true;
             GetComponent<SpriteRenderer>().enabled = false;
         }
+    }
+
+    public void Heal(int value)
+    {
+        currHP = Mathf.Clamp(currHP + value, 0, maxHP);
+        hpBar.UpdateBar(currHP);
     }
 
     public void ChangeState(UnitState newState)
