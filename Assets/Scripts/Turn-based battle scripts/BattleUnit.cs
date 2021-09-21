@@ -155,7 +155,12 @@ public class BattleUnit : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.J))
                 {
                     bh.TurnOffAllIndicators();
-                    StartCoroutine(UseSkill(currTargetParty[currTargetIndex]));
+                    if (!skills[currSkillIndex].ulti)
+                        StartCoroutine(UseSkill(currTargetParty[currTargetIndex]));
+                    else
+                    {
+                        StartCoroutine(UseUlti(currTargetParty[currTargetIndex]));
+                    }
                 }
                 break;
 
@@ -332,6 +337,19 @@ public class BattleUnit : MonoBehaviour
         yield return party.inventory[currSkillIndex].itemBase.ActivateItem(target);
         bhud.SetLog($"{name} used {party.inventory[currSkillIndex].itemBase.name} on {target.name}, healed {(int)party.inventory[currSkillIndex].itemBase.power}hp.");
         party.inventory[currSkillIndex].quantity--;
+        yield return new WaitForSeconds(0.35f);
+        ChangeState(UnitState.Waiting);
+        yield return TurnEnd();
+    }
+
+    IEnumerator UseUlti(BattleUnit target)
+    {
+        ChangeState(UnitState.Acting);
+        qteSys.PlayTimeline(skills[currSkillIndex], this, target);
+        yield return new WaitForSeconds((float)skills[currSkillIndex].timeline.duration + 0.2f);
+        float dmg = skills[currSkillIndex].power * qteSys.totalTimelineHit;
+        bhud.SetLog($"{name} used skill {skills[currSkillIndex].name} on {target.name} for {(int)dmg} damage.");
+        target.Damage((int)dmg);
         yield return new WaitForSeconds(0.35f);
         ChangeState(UnitState.Waiting);
         yield return TurnEnd();

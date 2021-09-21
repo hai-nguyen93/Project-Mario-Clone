@@ -2692,7 +2692,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'qte timer
+
+'
 --- !u!222 &588010882
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4112,7 +4114,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 'qte key text
+
+'
 --- !u!222 &1147094641
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6229,6 +6233,126 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1833804587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1833804590}
+  - component: {fileID: 1833804589}
+  - component: {fileID: 1833804588}
+  m_Layer: 0
+  m_Name: Timeline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1833804588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833804587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 2d42ab52cb233a54b93bfab49e9dd3fb, type: 2}
+    - {fileID: 11400000, guid: 5579d86f2bc975847a348ef1984bb293, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2015933782}
+          m_TargetAssemblyTypeName: QTESys, Assembly-CSharp
+          m_MethodName: SetKeyDuration
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 1.2
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2015933782}
+          m_TargetAssemblyTypeName: QTESys, Assembly-CSharp
+          m_MethodName: ShowKey
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: J
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2015933782}
+          m_TargetAssemblyTypeName: QTESys, Assembly-CSharp
+          m_MethodName: SetKeyDuration
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0.5
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 2015933782}
+          m_TargetAssemblyTypeName: QTESys, Assembly-CSharp
+          m_MethodName: ShowKey
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: K
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!320 &1833804589
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833804587}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 4f4a7866d1235234a9f7b980a8f249ce, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -4608525674111202406, guid: 4f4a7866d1235234a9f7b980a8f249ce, type: 2}
+    value: {fileID: 1833804588}
+  m_ExposedReferences:
+    m_References: []
+--- !u!4 &1833804590
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1833804587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1905232319
 GameObject:
   m_ObjectHideFlags: 0
@@ -6734,12 +6858,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 114c89c1dc73fbc40ac6aaad539c19dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bh: {fileID: 1281593947}
+  pdirector: {fileID: 1833804589}
   timeLimit: 3
   timer: 0
   timerText: {fileID: 588010881}
   comboText: {fileID: 1147094640}
   active: 0
   state: 3
+  totalTimelineHit: 0
 --- !u!1 &2019955491
 GameObject:
   m_ObjectHideFlags: 0
@@ -6960,6 +7087,7 @@ MonoBehaviour:
   isDead: 0
   skills:
   - {fileID: 11400000, guid: 4d221766c0f53744985a83c678dbd8be, type: 2}
+  - {fileID: 11400000, guid: f6d70dd4557fa804dac7149ce25181b5, type: 2}
   party: {fileID: 1519097992}
   state: 0
   bh: {fileID: 1281593947}

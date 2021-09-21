@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Playables;
 
 public enum QTEState { Fail, Success, CritialSuccess, Processing}
 public class QTESys : MonoBehaviour
 {
+    public BattleHandler bh;
+    public PlayableDirector pdirector;
     public float timeLimit = 3f;
     public float timer;
     public Text timerText;
     public Text comboText;
     public bool active = false;
     public QTEState state = QTEState.Processing;
+
+    // Timeline  
+    private BattleUnit currUser;
+    private BattleUnit currTarget;
+    private float keyDuration = 0.5f;
+    public int totalTimelineHit;
 
     private void Start()
     {
@@ -110,6 +119,52 @@ public class QTESys : MonoBehaviour
         active = false;
         timerText.enabled = false;
         comboText.enabled = false;
+    }
+
+    public void SetKeyDuration(float duration)
+    {
+        keyDuration = duration;
+    }
+
+    public void ShowKey(string key)
+    {
+        TurnOffUI();
+        KeyCode keyToPress = (KeyCode)System.Enum.Parse(typeof(KeyCode), key.ToUpper().Substring(0, 1));
+        comboText.text = keyToPress.ToString();
+        comboText.enabled = true;
+        StartCoroutine(TimelineQTE(keyToPress, keyDuration));
+    }
+
+    public IEnumerator TimelineQTE(KeyCode key, float duration)
+    {
+        float t = duration;
+        while (t > 0)
+        {
+            if (Input.anyKeyDown)
+            {
+                if (Input.GetKeyDown(key))
+                {
+                    totalTimelineHit++;
+                    bh.PlayParticleEffect("AttackParticle", currTarget.GetPosition());
+                }
+
+                TurnOffUI();
+                yield break;
+            }
+
+            t -= Time.deltaTime;
+            yield return null;
+        }
+        TurnOffUI();
+    }
+
+    public void PlayTimeline(SkillBase skill, BattleUnit user, BattleUnit target)
+    {
+        totalTimelineHit = 0;
+        currUser = user;
+        currTarget = target;
+        pdirector.playableAsset = skill.timeline;
+        pdirector.Play();
     }
 }
 

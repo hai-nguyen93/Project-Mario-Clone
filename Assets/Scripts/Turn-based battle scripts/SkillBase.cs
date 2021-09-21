@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Timeline;
 
 [CreateAssetMenu(fileName = "New Ability", menuName = "Ability")]
 public class SkillBase : ScriptableObject
@@ -14,6 +15,9 @@ public class SkillBase : ScriptableObject
 
     public bool qteCombo;
     public List<KeyCode> qteKeys;
+
+    public bool ulti;
+    public TimelineAsset timeline;
 
     public int power;
 
