@@ -598,6 +598,7 @@ MonoBehaviour:
   itemMenu: {fileID: 1779621732}
   skillPanel: {fileID: 280721849}
   itemPanel: {fileID: 1973001588}
+  pfFloatingText: {fileID: 4579128200190827708, guid: deea12647c0d460419f739b0a94b07bd, type: 3}
 --- !u!1 &155516095
 GameObject:
   m_ObjectHideFlags: 0

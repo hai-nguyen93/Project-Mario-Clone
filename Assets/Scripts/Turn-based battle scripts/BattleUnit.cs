@@ -167,8 +167,15 @@ public class BattleUnit : MonoBehaviour
             case CommandType.Item:
                 if (Input.GetKeyDown(KeyCode.J))
                 {
-                    bh.TurnOffAllIndicators();
-                    StartCoroutine(UseItem(currTargetParty[currTargetIndex]));
+                    if (party.inventory[currSkillIndex].quantity > 0)
+                    {
+                        bh.TurnOffAllIndicators();
+                        StartCoroutine(UseItem(currTargetParty[currTargetIndex]));
+                    }
+                    else
+                    {
+
+                    }
                 }
                 break;
         }      
@@ -202,6 +209,7 @@ public class BattleUnit : MonoBehaviour
 
     public void Damage(int value)
     {
+        bhud.ShowFloatingText(new Vector2(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.extents.y), value, Color.red);
         currHP = Mathf.Clamp(currHP - value, 0, 9999);
         hpBar.UpdateBar(currHP);
         if (currHP <= 0)
@@ -214,6 +222,7 @@ public class BattleUnit : MonoBehaviour
 
     public void Heal(int value)
     {
+        bhud.ShowFloatingText(new Vector2(transform.position.x, transform.position.y + GetComponent<SpriteRenderer>().bounds.extents.y), value, Color.green);
         currHP = Mathf.Clamp(currHP + value, 0, maxHP);
         hpBar.UpdateBar(currHP);
     }

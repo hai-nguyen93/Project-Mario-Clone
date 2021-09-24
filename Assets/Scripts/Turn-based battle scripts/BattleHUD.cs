@@ -11,6 +11,7 @@ public class BattleHUD : MonoBehaviour
     public GameObject itemMenu;
     public SkillPanelUI skillPanel;
     public ItemPanelUI itemPanel;
+    public FloatingText pfFloatingText;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +19,6 @@ public class BattleHUD : MonoBehaviour
         commandMenu.SetActive(false);
         skillMenu.SetActive(false);
         battleLog.text = "Battle begins!";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SetLog(string log)
@@ -75,5 +70,11 @@ public class BattleHUD : MonoBehaviour
         skillMenu.SetActive(false);
         itemMenu.SetActive(false);
         commandMenu.SetActive(false);
+    }
+
+    public void ShowFloatingText(Vector2 position, int value, Color color)
+    {
+        FloatingText ft = Instantiate(pfFloatingText, position, Quaternion.identity);
+        ft.Setup(value, color);
     }
 }
