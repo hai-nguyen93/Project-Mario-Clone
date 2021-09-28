@@ -216,7 +216,7 @@ public class BattleUnit : MonoBehaviour
         {
             currHP = 0;
             isDead = true;
-            GetComponent<SpriteRenderer>().enabled = false;
+            StartCoroutine(Dissolve());
         }
     }
 
@@ -362,5 +362,21 @@ public class BattleUnit : MonoBehaviour
         yield return new WaitForSeconds(0.35f);
         ChangeState(UnitState.Waiting);
         yield return TurnEnd();
+    }
+
+    IEnumerator Dissolve()
+    {
+        float burnTime = 0.7f;
+        float t = burnTime;
+        float fade = 0.6f;
+        var sr = GetComponent<SpriteRenderer>();
+        while (t >= 0)
+        {
+            t -= Time.deltaTime;
+            fade = Mathf.Lerp(0.7f, 0f, (burnTime - t) / burnTime);
+            sr.material.SetFloat("_Fade", fade);
+            yield return null;
+        }
+        sr.enabled = false;
     }
 }
