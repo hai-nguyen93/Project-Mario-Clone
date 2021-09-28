@@ -366,10 +366,17 @@ public class BattleUnit : MonoBehaviour
 
     IEnumerator Dissolve()
     {
+        var sr = GetComponent<SpriteRenderer>();
+        if (!sr.material.HasFloat("_Fade"))
+        {
+            sr.enabled = false;
+            yield break;
+        }
+
         float burnTime = 0.7f;
         float t = burnTime;
         float fade = 0.6f;
-        var sr = GetComponent<SpriteRenderer>();
+
         while (t >= 0)
         {
             t -= Time.deltaTime;
