@@ -7,7 +7,7 @@ public class FappyPlayerController : MonoBehaviour
     // Movement settings
     [Header("Movement Settings")]
     public float baseFapPower = 10f;
-    private float fapPower;
+    public float fapPower;
     [Tooltip("Euler degree")] public float maxRotationSpeed = 1080f;
     [Tooltip("Euler degree")] public float rotationAccel = 720f;
     private float rotationSpeed;

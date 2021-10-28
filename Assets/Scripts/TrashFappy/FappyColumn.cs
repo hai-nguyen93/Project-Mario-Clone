@@ -6,24 +6,31 @@ public class FappyColumn : MonoBehaviour
 {
     [Tooltip("The size of the empty space between upper and lower columns.")]
     public float width = 2f;
-    public GameObject upperColumn;
-    public GameObject lowerColumn;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public BoxCollider2D upperColumn;
+    public BoxCollider2D lowerColumn;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         FappyPlayerController player = collision.GetComponent<FappyPlayerController>();
         player?.Score();
+    }
+
+    public void Reposition(Vector3 pos, float width)
+    {
+        transform.position = pos + new Vector3(upperColumn.bounds.size.x, 0, 0);
+        SetupColumn(width);
+    }
+
+    public void SetupColumn(float width)
+    {
+        this.width = width;
+        upperColumn.transform.localPosition = new Vector3(0, (width + upperColumn.bounds.size.y) / 2f, 0);
+        lowerColumn.transform.localPosition = new Vector3(0, -(width + lowerColumn.bounds.size.y) / 2f, 0);
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        upperColumn.transform.localPosition = new Vector3(0, (width + upperColumn.bounds.size.y) / 2f, 0);
+        lowerColumn.transform.localPosition = new Vector3(0, -(width + lowerColumn.bounds.size.y) / 2f, 0);
     }
 }

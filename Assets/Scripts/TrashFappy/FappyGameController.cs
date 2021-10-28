@@ -15,6 +15,10 @@ public class FappyGameController : MonoBehaviour
     public float scrollingSpeed;
     [Tooltip("Speed up game(level) after x columns")] public int speedUpRate = 10;
     public int level = 1;
+    public float columnMinHeight = -4f;
+    public float columnMaxHeight = 4.5f;
+    public float columnMinWidth = 2f;
+    public float columnMaxWidth = 4f;
 
     [Header("UI Items")]
     public TextMeshProUGUI scoreText;
