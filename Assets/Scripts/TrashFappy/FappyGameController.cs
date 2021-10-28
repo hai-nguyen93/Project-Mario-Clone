@@ -11,7 +11,10 @@ public class FappyGameController : MonoBehaviour
     [Header("Game Settings")]
     public float playerSpeedModifier = 0.1f;
     public float baseScrollingSpeed = 2f;
-    public float scrollingSpeedModifier = 0.15f;
+    public float scrollingSpeedModifier = 0.125f;
+    public float scrollingSpeed;
+    [Tooltip("Speed up game(level) after x columns")] public int speedUpRate = 10;
+    public int level = 1;
 
     [Header("UI Items")]
     public TextMeshProUGUI scoreText;
@@ -33,16 +36,24 @@ public class FappyGameController : MonoBehaviour
     {
         if (gameOver)
         {
-            if (Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space))
             {
-                restart.Raise();
                 ResetGame();
+                restart.Raise();
             }
         }
     }
 
+    public void GameOver()
+    {
+        gameOver = true;
+        gameOverText.SetActive(true);
+    }
+
     public void ResetGame()
     {
+        level = 1;
+        scrollingSpeed = baseScrollingSpeed;
         score = 0;
         gameOver = false;
         UpdateScore();
@@ -50,14 +61,31 @@ public class FappyGameController : MonoBehaviour
         startText.SetActive(false);
     }
 
+    public void PlayerScore()
+    {
+        if (gameOver) return;
+
+        ++score;
+        UpdateScore();
+
+        // speed up after each 10 columns
+        if ((score / speedUpRate) >= level)
+        {
+            ++level;
+            scrollingSpeed *= (1 + scrollingSpeedModifier);
+            speedUp.Raise();
+        }
+    }
+
     public void UpdateScore()
     {
         scoreText.text = "Score: " + score;
     }
 
-    public void GameOver()
+    private void OnValidate()
     {
-        gameOver = true;
-        gameOverText.SetActive(true);
+        speedUpRate = Mathf.Abs(speedUpRate);
+        playerSpeedModifier = Mathf.Abs(playerSpeedModifier);
+        scrollingSpeedModifier = Mathf.Abs(scrollingSpeedModifier);
     }
 }

@@ -100,9 +100,11 @@ public class FappyPlayerController : MonoBehaviour
 
     public void Die()
     {
-        playerDies.Raise();
         isDead = true;
         rb.isKinematic = true;
+        rb.velocity = Vector2.zero;
+        em.enabled = false;
+        playerDies.Raise();
     }
 
     public void Restart()
@@ -111,6 +113,14 @@ public class FappyPlayerController : MonoBehaviour
         _rotatingbody.transform.rotation = Quaternion.identity;
         rb.isKinematic = false;
         isDead = false;
+    }
+
+    public void Score()
+    {
+        if (!isDead)
+        {
+            playerScores.Raise();
+        }
     }
 
     public void SpeedUp(FappyGameController controller)
