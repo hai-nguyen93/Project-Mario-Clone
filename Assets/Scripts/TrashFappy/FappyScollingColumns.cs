@@ -7,6 +7,7 @@ public class FappyScollingColumns : MonoBehaviour
     [Tooltip("The distance bewtween 2 columns")] public float columnDistance = 6.5f;
     private float speed;
     public FappyGameController gameController;
+    public FappyPlayerController player;
     private Vector2 cameraBottomLeft;
 
     private void Start()
@@ -16,7 +17,7 @@ public class FappyScollingColumns : MonoBehaviour
 
     void Update()
     {
-        if (!gameController.gameOver)
+        if (!player.IsDead)
         {
             foreach (Transform child in transform)
             {

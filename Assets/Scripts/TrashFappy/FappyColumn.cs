@@ -8,10 +8,19 @@ public class FappyColumn : MonoBehaviour
     public float width = 2f;
     public BoxCollider2D upperColumn;
     public BoxCollider2D lowerColumn;
+    public GameObject prefab_scoreParticle;
+    private ParticleSystem scoreParticle;
+
+    private void Start()
+    {
+        scoreParticle = Instantiate(prefab_scoreParticle, transform).GetComponent<ParticleSystem>();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         FappyPlayerController player = collision.GetComponent<FappyPlayerController>();
+        scoreParticle.transform.position = collision.transform.position;
+        scoreParticle.Play();
         player?.Score();
     }
 

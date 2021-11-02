@@ -11,6 +11,7 @@ public class FappyPlayerController : MonoBehaviour
     [Tooltip("Euler degree")] public float maxRotationSpeed = 1080f;
     [Tooltip("Euler degree")] public float rotationAccel = 720f;
     private float rotationSpeed;
+    public float dissolveDuration = 1f;
 
     // Objects to reference
     [Header("Reference Obj")]
@@ -28,6 +29,7 @@ public class FappyPlayerController : MonoBehaviour
     private bool isDead = false;
     public bool IsDead { get => isDead; }
     private Vector3 startPos;
+    private Material m_Dissolve;
 
 
     #region Unity's Monobehaviour's functions
@@ -41,6 +43,8 @@ public class FappyPlayerController : MonoBehaviour
         fapPower = baseFapPower;
         rb = GetComponent<Rigidbody2D>();
         rb.isKinematic = true;
+        m_Dissolve = _rotatingbody.GetComponent<SpriteRenderer>().material;
+        m_Dissolve.SetFloat("_Fade", 1);
         isDead = true;
         rotationSpeed = 0f;
         em = _thruster.emission;
@@ -103,14 +107,16 @@ public class FappyPlayerController : MonoBehaviour
         isDead = true;
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
-        em.enabled = false;
-        playerDies.Raise();
+        em.enabled = false;       
+        StartCoroutine(DieCoroutine());
     }
 
     public void Restart()
     {
+        fapPower = baseFapPower;
         transform.position = startPos;
         _rotatingbody.transform.rotation = Quaternion.identity;
+        m_Dissolve.SetFloat("_Fade", 1);
         rb.isKinematic = false;
         isDead = false;
     }
@@ -128,6 +134,19 @@ public class FappyPlayerController : MonoBehaviour
         fapPower = (1 + controller.playerSpeedModifier) * fapPower;
     }
 
+    public IEnumerator DieCoroutine()
+    {
+        float duration = dissolveDuration;
+        float timer = duration;
+        while (timer >= 0)
+        {
+            float fade = Mathf.Lerp(0.7f, 0f, 1 - timer / duration);
+            m_Dissolve.SetFloat("_Fade", fade);
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        playerDies.Raise();
+    }
     //////////////////////////////////////////////////////////
     #endregion
 
