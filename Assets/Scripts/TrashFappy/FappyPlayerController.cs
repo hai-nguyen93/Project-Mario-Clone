@@ -19,6 +19,7 @@ public class FappyPlayerController : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private ParticleSystem _thruster;
     private ParticleSystem.EmissionModule em;
+    private FappyAudioController audioController;
 
     // Player events
     [Header("Events")]
@@ -50,6 +51,8 @@ public class FappyPlayerController : MonoBehaviour
         rotationSpeed = 0f;
         em = _thruster.emission;
         em.enabled = false;
+
+        audioController = FindObjectOfType<FappyAudioController>();
     }
 
     private void Update()
@@ -108,7 +111,8 @@ public class FappyPlayerController : MonoBehaviour
         isDead = true;
         rb.isKinematic = true;
         rb.velocity = Vector2.zero;
-        em.enabled = false;       
+        em.enabled = false;
+        audioController?.PlaySFX("Die");
         StartCoroutine(DieCoroutine());
     }
 
