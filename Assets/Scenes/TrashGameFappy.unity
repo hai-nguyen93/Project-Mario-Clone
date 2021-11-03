@@ -201,7 +201,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -223,7 +223,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -537,7 +537,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -559,7 +559,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -832,7 +832,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -854,7 +854,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6001,6 +6001,7 @@ GameObject:
   - component: {fileID: 1244010138}
   - component: {fileID: 1244010140}
   - component: {fileID: 1244010141}
+  - component: {fileID: 1244010142}
   m_Layer: 0
   m_Name: FappyGameController
   m_TagString: Untagged
@@ -6026,12 +6027,14 @@ MonoBehaviour:
   baseScrollingSpeed: 2
   scrollingSpeedModifier: 0.11
   scrollingSpeed: 0
-  speedUpRate: 1
+  speedUpRate: 2
   level: 1
+  numberOfPassedColumns: 0
   columnMinHeight: -3
   columnMaxHeight: 4
   columnMinWidth: 2.5
   columnMaxWidth: 5
+  specialChance: 0.5
   scoreText: {fileID: 575417962}
   startText: {fileID: 1405528955}
   gameOverText: {fileID: 1689162279}
@@ -6098,11 +6101,39 @@ MonoBehaviour:
       - m_Target: {fileID: 1244010138}
         m_TargetAssemblyTypeName: FappyGameController, Assembly-CSharp
         m_MethodName: PlayerScore
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1244010142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244010137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e0fc9fcd5cd424e8fa8f26d236f4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 14ce1087f01eb94408240c06674132c1, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1244010138}
+        m_TargetAssemblyTypeName: FappyGameController, Assembly-CSharp
+        m_MethodName: PlayerScore
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 10
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -6185,7 +6216,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6207,7 +6238,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6264,6 +6295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 4
+  special: 0
   upperColumn: {fileID: 216477272}
   lowerColumn: {fileID: 1994409085}
   prefab_scoreParticle: {fileID: 7478443541595825613, guid: 37fd2a2088c49ce4b94be707f716b951, type: 3}
@@ -6614,6 +6646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 2.5
+  special: 0
   upperColumn: {fileID: 465425592}
   lowerColumn: {fileID: 1999076119}
   prefab_scoreParticle: {fileID: 7478443541595825613, guid: 37fd2a2088c49ce4b94be707f716b951, type: 3}
@@ -6737,6 +6770,7 @@ MonoBehaviour:
   _rotatingbody: {fileID: 1106801653}
   _thruster: {fileID: 1060594460}
   playerScores: {fileID: 11400000, guid: a1c9b76fd9c4f4143b59cfebbdf52974, type: 2}
+  specialScore: {fileID: 11400000, guid: 14ce1087f01eb94408240c06674132c1, type: 2}
   playerDies: {fileID: 11400000, guid: 2245b47e190db244ea7a43c22118e833, type: 2}
 --- !u!114 &1913984428
 MonoBehaviour:
@@ -6872,7 +6906,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6894,7 +6928,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -6982,7 +7016,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7b8d87cde18e80745a26915f12eb2cc7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7004,7 +7038,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.28218198, g: 0.8867924, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -7061,6 +7095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   width: 4
+  special: 0
   upperColumn: {fileID: 1314054363}
   lowerColumn: {fileID: 15755965}
   prefab_scoreParticle: {fileID: 7478443541595825613, guid: 37fd2a2088c49ce4b94be707f716b951, type: 3}

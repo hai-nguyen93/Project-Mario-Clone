@@ -15,10 +15,12 @@ public class FappyGameController : MonoBehaviour
     public float scrollingSpeed;
     [Tooltip("Speed up game(level) after x columns")] public int speedUpRate = 10;
     public int level = 1;
+    public int numberOfPassedColumns = 0;
     public float columnMinHeight = -4f;
     public float columnMaxHeight = 4.5f;
     public float columnMinWidth = 2f;
     public float columnMaxWidth = 4f;
+    [Range(0f, 1f)] public float specialChance = 0.5f;
 
     [Header("UI Items")]
     public TextMeshProUGUI scoreText;
@@ -57,6 +59,7 @@ public class FappyGameController : MonoBehaviour
     public void ResetGame()
     {
         level = 1;
+        numberOfPassedColumns = 0;
         scrollingSpeed = baseScrollingSpeed;
         score = 0;
         gameOver = false;
@@ -65,15 +68,16 @@ public class FappyGameController : MonoBehaviour
         startText.SetActive(false);
     }
 
-    public void PlayerScore()
+    public void PlayerScore(int value)
     {
         if (gameOver) return;
 
-        ++score;
+        ++numberOfPassedColumns;
+        score += value;
         UpdateScore();
 
-        // speed up after each 10 columns
-        if ((score / speedUpRate) >= level)
+        // speed up after each <speedUpRate> columns
+        if ((numberOfPassedColumns / speedUpRate) >= level)
         {
             ++level;
             scrollingSpeed *= (1 + scrollingSpeedModifier);

@@ -6,6 +6,7 @@ public class FappyColumn : MonoBehaviour
 {
     [Tooltip("The size of the empty space between upper and lower columns.")]
     public float width = 2f;
+    public bool special = false;
     public BoxCollider2D upperColumn;
     public BoxCollider2D lowerColumn;
     public GameObject prefab_scoreParticle;
@@ -19,15 +20,30 @@ public class FappyColumn : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         FappyPlayerController player = collision.GetComponent<FappyPlayerController>();
-        scoreParticle.transform.position = collision.transform.position;
-        scoreParticle.Play();
-        player?.Score();
+        if (player)
+        {
+            scoreParticle.transform.position = collision.transform.position;
+            scoreParticle.Play();
+            player.Score(special);
+        }
     }
 
-    public void Reposition(Vector3 pos, float width)
+    public void Reposition(Vector3 pos, float width, bool specialColumn)
     {
         transform.position = pos + new Vector3(upperColumn.bounds.size.x, 0, 0);
         SetupColumn(width);
+        if (specialColumn)
+        {
+            special = true;
+            upperColumn.GetComponent<SpriteRenderer>().material.SetFloat("_Special", 1);
+            lowerColumn.GetComponent<SpriteRenderer>().material.SetFloat("_Special", 1);
+        }
+        else
+        {
+            special = false;
+            upperColumn.GetComponent<SpriteRenderer>().material.SetFloat("_Special", 0);
+            lowerColumn.GetComponent<SpriteRenderer>().material.SetFloat("_Special", 0);
+        }
     }
 
     public void SetupColumn(float width)

@@ -23,6 +23,7 @@ public class FappyPlayerController : MonoBehaviour
     // Player events
     [Header("Events")]
     public GameEvent playerScores;
+    public GameEvent specialScore;
     public GameEvent playerDies;
 
     // PlayerController's properties
@@ -121,11 +122,14 @@ public class FappyPlayerController : MonoBehaviour
         isDead = false;
     }
 
-    public void Score()
+    public void Score(bool special)
     {
         if (!isDead)
         {
-            playerScores.Raise();
+            if (!special)
+                playerScores.Raise();
+            else
+                specialScore.Raise();
         }
     }
 

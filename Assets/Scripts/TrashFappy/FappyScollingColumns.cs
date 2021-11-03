@@ -27,7 +27,8 @@ public class FappyScollingColumns : MonoBehaviour
                     float _y = Random.Range(gameController.columnMinHeight, gameController.columnMaxHeight);
                     float newWidth = Random.Range(gameController.columnMinWidth, gameController.columnMaxWidth);
                     Vector3 newPos = new Vector3(-cameraBottomLeft.x, _y, 0);
-                    child.GetComponent<FappyColumn>().Reposition(newPos, newWidth);
+                    bool special = Random.Range(0.001f, 1f) <= gameController.specialChance;
+                    child.GetComponent<FappyColumn>().Reposition(newPos, newWidth, special);
                 }
 
                 child.position += new Vector3(-speed * Time.deltaTime, 0, 0);
@@ -47,7 +48,8 @@ public class FappyScollingColumns : MonoBehaviour
             float _x = 3;
             float _y = Random.Range(gameController.columnMinHeight, gameController.columnMaxHeight);
             float newWidth = Random.Range(gameController.columnMinWidth, gameController.columnMaxWidth);
-            transform.GetChild(i).GetComponent<FappyColumn>().Reposition(new Vector3(_x + columnDistance * i, _y, 0), newWidth);
+            bool special = Random.Range(0.001f, 1f) <= gameController.specialChance;
+            transform.GetChild(i).GetComponent<FappyColumn>().Reposition(new Vector3(_x + columnDistance * i, _y, 0), newWidth, special);
         }
     }
 }
