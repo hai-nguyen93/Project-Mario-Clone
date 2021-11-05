@@ -20,6 +20,7 @@ public class FappyPlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem _thruster;
     private ParticleSystem.EmissionModule em;
     private FappyAudioController audioController;
+    public GameObject shockwave;
 
     // Player events
     [Header("Events")]
@@ -53,6 +54,7 @@ public class FappyPlayerController : MonoBehaviour
         em.enabled = false;
 
         audioController = FindObjectOfType<FappyAudioController>();
+        shockwave.SetActive(false);
     }
 
     private void Update()
@@ -118,6 +120,7 @@ public class FappyPlayerController : MonoBehaviour
 
     public void Restart()
     {
+        shockwave.SetActive(false);
         fapPower = baseFapPower;
         transform.position = startPos;
         _rotatingbody.transform.rotation = Quaternion.identity;
@@ -146,13 +149,17 @@ public class FappyPlayerController : MonoBehaviour
     {
         float duration = dissolveDuration;
         float timer = duration;
+        shockwave.SetActive(true);
+        var m_shockwave = shockwave.GetComponent<SpriteRenderer>().material;
         while (timer >= 0)
         {
             float fade = Mathf.Lerp(0.7f, 0f, 1 - timer / duration);
             m_Dissolve.SetFloat("_Fade", fade);
+            m_shockwave.SetFloat("_NormalizedTime", 1 - timer / duration);
             timer -= Time.deltaTime;
             yield return null;
         }
+        shockwave.SetActive(false);
         playerDies.Raise();
     }
     //////////////////////////////////////////////////////////
